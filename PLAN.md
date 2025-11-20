@@ -9,7 +9,7 @@ A modern, mobile-friendly planner application built with Laravel, Livewire, and 
 ## Technology Stack
 
 ### Core Framework
-- **Laravel**: Latest stable version (11.x)
+- **Laravel**: Latest stable version (12.x)
 - **PHP**: 8.2+
 - **Database**: MySQL 8.0+ or PostgreSQL 15+
 
@@ -339,9 +339,9 @@ Zap for Laravel provides calendar and scheduling functionality. Integration poin
 ## Implementation Phases
 
 ### Phase 1: Foundation (Weeks 1-2)
-- [x] Laravel project setup
-- [x] Install and configure Tailwind CSS
-- [x] Install and configure Livewire
+- [ ] Laravel project setup
+- [ ] Install and configure Tailwind CSS
+- [ ] Install and configure Livewire
 - [ ] Install Zap for Laravel
 - [ ] Database schema design and migrations
 - [ ] Authentication setup (Laravel Breeze)
@@ -535,7 +535,7 @@ composer require nesbot/carbon
 composer require spatie/laravel-icalendar-generator
 
 # Zap for Laravel (if available via Composer)
-# composer require vendor/zap-laravel
+# composer require laraveljutsu/zap
 ```
 
 ---
@@ -613,7 +613,7 @@ composer require spatie/laravel-icalendar-generator
 
 ### Zap for Laravel
 If Zap for Laravel is a specific package, ensure:
-1. Package compatibility with Laravel 11.x
+1. Package compatibility with Laravel 12.x
 2. License compliance
 3. Documentation availability
 4. Community support and maintenance status
@@ -638,7 +638,7 @@ If Zap is not available or suitable:
 ## Getting Started
 
 ### Immediate Next Steps
-1. [ ] Install Laravel 11.x
+1. [ ] Install Laravel 12.x
 2. [ ] Configure Tailwind CSS and Livewire
 3. [ ] Research and evaluate Zap for Laravel package
 4. [ ] Create database schema
