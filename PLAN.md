@@ -31,18 +31,18 @@ A modern, mobile-friendly planner application built with Laravel, Livewire, and 
 ## Core Features
 
 ### 1. User Authentication & Management
-- [x] User registration and login
-- [x] Email verification
-- [x] Password reset functionality
+- [ ] User registration and login
+- [ ] Email verification
+- [ ] Password reset functionality
 - [ ] User profile management
 - [ ] Account settings (timezone, preferences)
 - [ ] Multi-user support with isolated data
 
 ### 2. Calendar Management
 - [ ] Multiple calendar types per user:
-  - [ ] Personal Calendar
-  - [ ] Business Calendar
-  - [ ] Custom named calendars
+- [ ] Personal Calendar
+- [ ] Business Calendar
+- [ ] Custom named calendars
 - [ ] Calendar color coding
 - [ ] Calendar visibility toggling
 - [ ] Unified calendar view (merge multiple calendars)
@@ -51,18 +51,18 @@ A modern, mobile-friendly planner application built with Laravel, Livewire, and 
 
 ### 3. Appointment Scheduling
 - [ ] Create appointments with:
-  - [ ] Title and description
-  - [ ] Start and end date/time
-  - [ ] Calendar assignment (personal/business)
-  - [ ] Location (optional)
-  - [ ] Notes/details
-  - [ ] Color labels
+- [ ] Title and description
+- [ ] Start and end date/time
+- [ ] Calendar assignment (personal/business)
+- [ ] Location (optional)
+- [ ] Notes/details
+- [ ] Color labels
 - [ ] Edit and update appointments
 - [ ] Delete appointments
 - [ ] Recurring appointments:
-  - [ ] Daily, Weekly, Monthly, Yearly patterns
-  - [ ] Custom recurrence rules
-  - [ ] End date or occurrence count
+- [ ] Daily, Weekly, Monthly, Yearly patterns
+- [ ] Custom recurrence rules
+- [ ] End date or occurrence count
 - [ ] All-day events
 - [ ] Multi-day events
 
