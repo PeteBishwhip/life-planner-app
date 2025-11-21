@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Calendar;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class CalendarFeatureTest extends TestCase
@@ -19,7 +20,7 @@ class CalendarFeatureTest extends TestCase
         $this->user = User::factory()->create();
     }
 
-    /** @test */
+    #[Test]
     public function user_can_view_calendars_index(): void
     {
         $this->actingAs($this->user);
@@ -32,7 +33,7 @@ class CalendarFeatureTest extends TestCase
         $response->assertSee('calendars');
     }
 
-    /** @test */
+    #[Test]
     public function user_can_create_a_calendar(): void
     {
         $this->actingAs($this->user);
@@ -58,7 +59,7 @@ class CalendarFeatureTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function user_can_update_their_calendar(): void
     {
         $this->actingAs($this->user);
@@ -86,7 +87,7 @@ class CalendarFeatureTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function user_can_delete_their_non_default_calendar(): void
     {
         $this->actingAs($this->user);
@@ -105,7 +106,7 @@ class CalendarFeatureTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function user_cannot_delete_default_calendar(): void
     {
         $this->actingAs($this->user);
@@ -124,7 +125,7 @@ class CalendarFeatureTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function user_cannot_view_another_users_calendar(): void
     {
         $this->actingAs($this->user);
@@ -137,7 +138,7 @@ class CalendarFeatureTest extends TestCase
         $response->assertStatus(403);
     }
 
-    /** @test */
+    #[Test]
     public function user_cannot_update_another_users_calendar(): void
     {
         $this->actingAs($this->user);
@@ -154,7 +155,7 @@ class CalendarFeatureTest extends TestCase
         $response->assertStatus(403);
     }
 
-    /** @test */
+    #[Test]
     public function user_can_toggle_calendar_visibility(): void
     {
         $this->actingAs($this->user);
@@ -172,7 +173,7 @@ class CalendarFeatureTest extends TestCase
         $this->assertFalse($calendar->is_visible);
     }
 
-    /** @test */
+    #[Test]
     public function user_can_set_calendar_as_default(): void
     {
         $this->actingAs($this->user);
@@ -192,7 +193,7 @@ class CalendarFeatureTest extends TestCase
         $this->assertTrue($calendar2->is_default);
     }
 
-    /** @test */
+    #[Test]
     public function validation_fails_for_invalid_calendar_data(): void
     {
         $this->actingAs($this->user);

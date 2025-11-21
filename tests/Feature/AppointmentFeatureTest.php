@@ -6,6 +6,7 @@ use App\Models\Appointment;
 use App\Models\Calendar;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class AppointmentFeatureTest extends TestCase
@@ -23,7 +24,7 @@ class AppointmentFeatureTest extends TestCase
         $this->calendar = Calendar::factory()->for($this->user)->create();
     }
 
-    /** @test */
+    #[Test]
     public function user_can_view_appointments_index(): void
     {
         $this->actingAs($this->user);
@@ -36,7 +37,7 @@ class AppointmentFeatureTest extends TestCase
         $response->assertSee('appointments');
     }
 
-    /** @test */
+    #[Test]
     public function user_can_create_an_appointment(): void
     {
         $this->actingAs($this->user);
@@ -64,7 +65,7 @@ class AppointmentFeatureTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function user_can_update_their_appointment(): void
     {
         $this->actingAs($this->user);
@@ -95,7 +96,7 @@ class AppointmentFeatureTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function user_can_delete_their_appointment(): void
     {
         $this->actingAs($this->user);
@@ -112,7 +113,7 @@ class AppointmentFeatureTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function user_cannot_view_another_users_appointment(): void
     {
         $this->actingAs($this->user);
@@ -126,7 +127,7 @@ class AppointmentFeatureTest extends TestCase
         $response->assertStatus(403);
     }
 
-    /** @test */
+    #[Test]
     public function user_cannot_update_another_users_appointment(): void
     {
         $this->actingAs($this->user);
@@ -146,7 +147,7 @@ class AppointmentFeatureTest extends TestCase
         $response->assertStatus(403);
     }
 
-    /** @test */
+    #[Test]
     public function user_can_mark_appointment_as_completed(): void
     {
         $this->actingAs($this->user);
@@ -164,7 +165,7 @@ class AppointmentFeatureTest extends TestCase
         $this->assertEquals('completed', $appointment->status);
     }
 
-    /** @test */
+    #[Test]
     public function user_can_cancel_appointment(): void
     {
         $this->actingAs($this->user);
@@ -182,7 +183,7 @@ class AppointmentFeatureTest extends TestCase
         $this->assertEquals('cancelled', $appointment->status);
     }
 
-    /** @test */
+    #[Test]
     public function validation_fails_for_invalid_appointment_data(): void
     {
         $this->actingAs($this->user);
@@ -197,7 +198,7 @@ class AppointmentFeatureTest extends TestCase
         $response->assertSessionHasErrors(['title', 'calendar_id', 'start_datetime', 'end_datetime']);
     }
 
-    /** @test */
+    #[Test]
     public function end_datetime_must_be_after_start_datetime(): void
     {
         $this->actingAs($this->user);
@@ -213,7 +214,7 @@ class AppointmentFeatureTest extends TestCase
         $response->assertSessionHasErrors(['end_datetime']);
     }
 
-    /** @test */
+    #[Test]
     public function user_can_filter_appointments_by_calendar(): void
     {
         $this->actingAs($this->user);
@@ -229,7 +230,7 @@ class AppointmentFeatureTest extends TestCase
         // Would need to check the view data or rendered output to verify filtering
     }
 
-    /** @test */
+    #[Test]
     public function user_can_filter_appointments_by_status(): void
     {
         $this->actingAs($this->user);

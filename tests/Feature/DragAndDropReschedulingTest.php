@@ -107,17 +107,18 @@ class DragAndDropReschedulingTest extends TestCase
         $otherUser = User::factory()->create();
         $otherCalendar = Calendar::factory()->create(['user_id' => $otherUser->id]);
 
+        $originalStart = Carbon::parse('2025-01-15 10:00:00');
+        $originalEnd = Carbon::parse('2025-01-15 11:00:00');
+
         $appointment = Appointment::factory()->create([
             'user_id' => $otherUser->id,
             'calendar_id' => $otherCalendar->id,
             'title' => 'Other User Meeting',
-            'start_datetime' => Carbon::parse('2025-01-15 10:00:00'),
-            'end_datetime' => Carbon::parse('2025-01-15 11:00:00'),
+            'start_datetime' => $originalStart,
+            'end_datetime' => $originalEnd,
         ]);
 
         $this->actingAs($this->user);
-
-        $this->expectException(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
 
         Livewire::test(AppointmentManager::class)
             ->call('reschedule',
@@ -125,6 +126,11 @@ class DragAndDropReschedulingTest extends TestCase
                 '2025-01-15 14:00:00',
                 '2025-01-15 15:00:00'
             );
+
+        // Verify the appointment was NOT rescheduled
+        $appointment->refresh();
+        $this->assertEquals($originalStart->format('Y-m-d H:i:s'), $appointment->start_datetime->format('Y-m-d H:i:s'));
+        $this->assertEquals($originalEnd->format('Y-m-d H:i:s'), $appointment->end_datetime->format('Y-m-d H:i:s'));
     }
 
     public function test_reschedules_all_day_event(): void
