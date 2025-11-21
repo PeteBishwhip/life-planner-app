@@ -169,7 +169,7 @@ class AppointmentFactory extends Factory
     public function meeting(): static
     {
         return $this->state(fn (array $attributes) => [
-            'title' => 'Meeting: ' . $this->faker->sentence(2),
+            'title' => 'Meeting: '.$this->faker->sentence(2),
             'location' => $this->faker->randomElement([
                 'Conference Room A',
                 'Conference Room B',

@@ -9,7 +9,9 @@ use Livewire\Component;
 class MonthView extends Component
 {
     public Carbon $currentDate;
+
     public Collection $appointments;
+
     public array $visibleCalendars;
 
     public function mount(Carbon $currentDate, Collection $appointments, array $visibleCalendars): void

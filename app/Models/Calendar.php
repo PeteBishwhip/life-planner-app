@@ -50,7 +50,7 @@ class Calendar extends Model
         static::creating(function (Calendar $calendar) {
             // Set default color if not provided
             if (empty($calendar->color)) {
-                $calendar->color = match($calendar->type) {
+                $calendar->color = match ($calendar->type) {
                     'personal' => '#3B82F6', // Blue
                     'business' => '#10B981', // Green
                     'custom' => '#8B5CF6',   // Purple

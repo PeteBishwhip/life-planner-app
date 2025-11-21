@@ -25,9 +25,9 @@ class CalendarFactory extends Factory
 
         return [
             'user_id' => User::factory(),
-            'name' => $this->faker->words(2, true) . ' Calendar',
+            'name' => $this->faker->words(2, true).' Calendar',
             'type' => $type,
-            'color' => match($type) {
+            'color' => match ($type) {
                 'personal' => $this->faker->randomElement(['#3B82F6', '#EF4444', '#F59E0B']),
                 'business' => $this->faker->randomElement(['#10B981', '#8B5CF6', '#EC4899']),
                 'custom' => $this->faker->randomElement(['#6366F1', '#14B8A6', '#F97316']),

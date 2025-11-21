@@ -14,6 +14,7 @@ class AppointmentTest extends TestCase
     use RefreshDatabase;
 
     protected User $user;
+
     protected Calendar $calendar;
 
     protected function setUp(): void
@@ -276,7 +277,7 @@ class AppointmentTest extends TestCase
             ]);
 
         // Overlapping time
-        $hasConflict = (new Appointment())->hasConflict(
+        $hasConflict = (new Appointment)->hasConflict(
             $this->calendar->id,
             now()->addHours(1)->addMinutes(30),
             now()->addHours(2)->addMinutes(30)
@@ -285,7 +286,7 @@ class AppointmentTest extends TestCase
         $this->assertTrue($hasConflict);
 
         // Non-overlapping time
-        $noConflict = (new Appointment())->hasConflict(
+        $noConflict = (new Appointment)->hasConflict(
             $this->calendar->id,
             now()->addHours(3),
             now()->addHours(4)

@@ -17,6 +17,7 @@ class AppointmentSeeder extends Seeder
 
         if ($calendars->isEmpty()) {
             $this->command->warn('No calendars found. Please run CalendarSeeder first.');
+
             return;
         }
 

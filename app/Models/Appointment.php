@@ -117,19 +117,19 @@ class Appointment extends Model
     {
         return $query->where(function ($q) use ($startDate, $endDate) {
             $q->whereBetween('start_datetime', [$startDate, $endDate])
-              ->orWhereBetween('end_datetime', [$startDate, $endDate])
-              ->orWhere(function ($q) use ($startDate, $endDate) {
-                  $q->where('start_datetime', '<=', $startDate)
-                    ->where('end_datetime', '>=', $endDate);
-              });
+                ->orWhereBetween('end_datetime', [$startDate, $endDate])
+                ->orWhere(function ($q) use ($startDate, $endDate) {
+                    $q->where('start_datetime', '<=', $startDate)
+                        ->where('end_datetime', '>=', $endDate);
+                });
         });
     }
 
     public function scopeUpcoming(Builder $query): Builder
     {
         return $query->where('start_datetime', '>=', now())
-                    ->where('status', 'scheduled')
-                    ->orderBy('start_datetime', 'asc');
+            ->where('status', 'scheduled')
+            ->orderBy('start_datetime', 'asc');
     }
 
     public function scopeScheduled(Builder $query): Builder
@@ -157,7 +157,7 @@ class Appointment extends Model
      */
     public function isRecurring(): bool
     {
-        return !empty($this->recurrence_rule);
+        return ! empty($this->recurrence_rule);
     }
 
     public function hasConflict(int $calendarId, $start, $end, ?int $excludeId = null): bool
@@ -166,11 +166,11 @@ class Appointment extends Model
             ->where('status', 'scheduled')
             ->where(function ($q) use ($start, $end) {
                 $q->whereBetween('start_datetime', [$start, $end])
-                  ->orWhereBetween('end_datetime', [$start, $end])
-                  ->orWhere(function ($q) use ($start, $end) {
-                      $q->where('start_datetime', '<=', $start)
-                        ->where('end_datetime', '>=', $end);
-                  });
+                    ->orWhereBetween('end_datetime', [$start, $end])
+                    ->orWhere(function ($q) use ($start, $end) {
+                        $q->where('start_datetime', '<=', $start)
+                            ->where('end_datetime', '>=', $end);
+                    });
             });
 
         if ($excludeId) {

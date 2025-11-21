@@ -118,7 +118,7 @@ class CalendarController extends Controller
     {
         $this->authorize('update', $calendar);
 
-        $calendar->update(['is_visible' => !$calendar->is_visible]);
+        $calendar->update(['is_visible' => ! $calendar->is_visible]);
 
         return redirect()
             ->back()

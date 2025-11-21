@@ -68,7 +68,7 @@ class AppointmentController extends Controller
 
         // Check for conflicts if needed
         if ($request->has('check_conflicts') && $request->check_conflicts) {
-            $hasConflict = (new Appointment())->hasConflict(
+            $hasConflict = (new Appointment)->hasConflict(
                 $validated['calendar_id'],
                 $validated['start_datetime'],
                 $validated['end_datetime']
@@ -128,7 +128,7 @@ class AppointmentController extends Controller
 
         // Check for conflicts (excluding current appointment)
         if ($request->has('check_conflicts') && $request->check_conflicts) {
-            $hasConflict = (new Appointment())->hasConflict(
+            $hasConflict = (new Appointment)->hasConflict(
                 $validated['calendar_id'],
                 $validated['start_datetime'],
                 $validated['end_datetime'],

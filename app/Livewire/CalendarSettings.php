@@ -8,14 +8,21 @@ use Livewire\Component;
 class CalendarSettings extends Component
 {
     public ?int $calendarId = null;
+
     public string $name = '';
+
     public string $type = 'personal';
+
     public string $color = '#3B82F6';
+
     public bool $is_visible = true;
+
     public bool $is_default = false;
+
     public string $description = '';
 
     public bool $isOpen = false;
+
     public bool $isEditing = false;
 
     protected function rules(): array
@@ -59,6 +66,7 @@ class CalendarSettings extends Component
 
             if ($calendar->user_id !== auth()->id()) {
                 session()->flash('error', 'Unauthorized action.');
+
                 return;
             }
 
@@ -79,11 +87,13 @@ class CalendarSettings extends Component
 
         if ($calendar->user_id !== auth()->id()) {
             session()->flash('error', 'Unauthorized action.');
+
             return;
         }
 
         if ($calendar->is_default) {
             session()->flash('error', 'Cannot delete the default calendar.');
+
             return;
         }
 
@@ -101,7 +111,7 @@ class CalendarSettings extends Component
             return;
         }
 
-        $calendar->update(['is_visible' => !$calendar->is_visible]);
+        $calendar->update(['is_visible' => ! $calendar->is_visible]);
 
         $this->dispatch('calendar-visibility-toggled');
     }
@@ -123,7 +133,7 @@ class CalendarSettings extends Component
     public function onTypeChanged(): void
     {
         // Update color based on type if it hasn't been customized
-        $this->color = match($this->type) {
+        $this->color = match ($this->type) {
             'personal' => '#3B82F6', // Blue
             'business' => '#10B981', // Green
             'custom' => '#8B5CF6',   // Purple

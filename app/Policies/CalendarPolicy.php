@@ -44,7 +44,7 @@ class CalendarPolicy
      */
     public function delete(User $user, Calendar $calendar): bool
     {
-        return $user->id === $calendar->user_id && !$calendar->is_default;
+        return $user->id === $calendar->user_id && ! $calendar->is_default;
     }
 
     /**

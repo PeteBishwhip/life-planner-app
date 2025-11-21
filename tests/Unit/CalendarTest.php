@@ -135,7 +135,7 @@ class CalendarTest extends TestCase
         $userCalendars = Calendar::forUser($this->user->id)->get();
 
         $this->assertCount(2, $userCalendars);
-        $this->assertTrue($userCalendars->every(fn($cal) => $cal->user_id === $this->user->id));
+        $this->assertTrue($userCalendars->every(fn ($cal) => $cal->user_id === $this->user->id));
     }
 
     /** @test */
@@ -148,7 +148,7 @@ class CalendarTest extends TestCase
         $personalCalendars = Calendar::ofType('personal')->get();
 
         $this->assertCount(2, $personalCalendars);
-        $this->assertTrue($personalCalendars->every(fn($cal) => $cal->type === 'personal'));
+        $this->assertTrue($personalCalendars->every(fn ($cal) => $cal->type === 'personal'));
     }
 
     /** @test */
@@ -208,7 +208,7 @@ class CalendarTest extends TestCase
         $this->assertContains('required', $rules['type']);
 
         // Check that type validation includes the correct enum values
-        $typeRule = collect($rules['type'])->first(fn($rule) => str_contains($rule, 'in:'));
+        $typeRule = collect($rules['type'])->first(fn ($rule) => str_contains($rule, 'in:'));
         $this->assertStringContainsString('personal', $typeRule);
         $this->assertStringContainsString('business', $typeRule);
         $this->assertStringContainsString('custom', $typeRule);
@@ -223,7 +223,7 @@ class CalendarTest extends TestCase
         $this->assertContains('required', $rules['color']);
 
         // Check that color validation includes regex
-        $hasRegex = collect($rules['color'])->contains(fn($rule) => str_contains($rule, 'regex'));
+        $hasRegex = collect($rules['color'])->contains(fn ($rule) => str_contains($rule, 'regex'));
         $this->assertTrue($hasRegex);
     }
 }

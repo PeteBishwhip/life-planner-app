@@ -9,17 +9,27 @@ use Livewire\Component;
 class AppointmentManager extends Component
 {
     public ?int $appointmentId = null;
+
     public ?int $calendar_id = null;
+
     public string $title = '';
+
     public string $description = '';
+
     public string $location = '';
+
     public string $start_datetime = '';
+
     public string $end_datetime = '';
+
     public bool $is_all_day = false;
+
     public string $color = '';
+
     public string $status = 'scheduled';
 
     public bool $isOpen = false;
+
     public bool $isEditing = false;
 
     protected function rules(): array
@@ -75,6 +85,7 @@ class AppointmentManager extends Component
 
             if ($appointment->user_id !== auth()->id()) {
                 session()->flash('error', 'Unauthorized action.');
+
                 return;
             }
 
@@ -96,6 +107,7 @@ class AppointmentManager extends Component
 
             if ($appointment->user_id !== auth()->id()) {
                 session()->flash('error', 'Unauthorized action.');
+
                 return;
             }
 

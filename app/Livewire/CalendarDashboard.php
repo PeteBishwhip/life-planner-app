@@ -3,16 +3,19 @@
 namespace App\Livewire;
 
 use App\Models\Appointment;
-use App\Models\Calendar;
 use Carbon\Carbon;
 use Livewire\Component;
 
 class CalendarDashboard extends Component
 {
     public string $viewType = 'month'; // month, week, day, list
+
     public Carbon $currentDate;
+
     public array $visibleCalendars = [];
+
     public ?int $selectedAppointment = null;
+
     public bool $showAppointmentModal = false;
 
     public function mount(): void
@@ -49,7 +52,7 @@ class CalendarDashboard extends Component
 
     public function previous(): void
     {
-        $this->currentDate = match($this->viewType) {
+        $this->currentDate = match ($this->viewType) {
             'month' => $this->currentDate->copy()->subMonth(),
             'week' => $this->currentDate->copy()->subWeek(),
             'day' => $this->currentDate->copy()->subDay(),
@@ -59,7 +62,7 @@ class CalendarDashboard extends Component
 
     public function next(): void
     {
-        $this->currentDate = match($this->viewType) {
+        $this->currentDate = match ($this->viewType) {
             'month' => $this->currentDate->copy()->addMonth(),
             'week' => $this->currentDate->copy()->addWeek(),
             'day' => $this->currentDate->copy()->addDay(),
@@ -76,7 +79,7 @@ class CalendarDashboard extends Component
     {
         if (in_array($calendarId, $this->visibleCalendars)) {
             $this->visibleCalendars = array_values(
-                array_filter($this->visibleCalendars, fn($id) => $id !== $calendarId)
+                array_filter($this->visibleCalendars, fn ($id) => $id !== $calendarId)
             );
         } else {
             $this->visibleCalendars[] = $calendarId;
@@ -121,7 +124,7 @@ class CalendarDashboard extends Component
 
     protected function getDateRange(): array
     {
-        return match($this->viewType) {
+        return match ($this->viewType) {
             'month' => [
                 $this->currentDate->copy()->startOfMonth()->startOfWeek(),
                 $this->currentDate->copy()->endOfMonth()->endOfWeek(),
@@ -143,10 +146,10 @@ class CalendarDashboard extends Component
 
     public function getFormattedDateRangeProperty(): string
     {
-        return match($this->viewType) {
+        return match ($this->viewType) {
             'month' => $this->currentDate->format('F Y'),
-            'week' => $this->currentDate->copy()->startOfWeek()->format('M d') .
-                      ' - ' .
+            'week' => $this->currentDate->copy()->startOfWeek()->format('M d').
+                      ' - '.
                       $this->currentDate->copy()->endOfWeek()->format('M d, Y'),
             'day' => $this->currentDate->format('l, F d, Y'),
             'list' => 'Upcoming Events',
