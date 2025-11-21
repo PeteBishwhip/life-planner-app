@@ -48,8 +48,6 @@ class IcsImportService
         ]);
 
         try {
-            DB::beginTransaction();
-
             $calendar = Vcalendar::factory()->setConfig(
                 new \Kigkonsult\Icalcreator\Util\Config([
                     'unique_id' => 'life-planner-app',
@@ -77,8 +75,6 @@ class IcsImportService
                 }
             }
 
-            DB::commit();
-
             // Update import log
             $importLog->update([
                 'status' => $this->failCount > 0 ? 'completed_with_errors' : 'completed',
@@ -88,8 +84,6 @@ class IcsImportService
             ]);
 
         } catch (\Exception $e) {
-            DB::rollBack();
-
             $importLog->update([
                 'status' => 'failed',
                 'records_imported' => $this->successCount,
