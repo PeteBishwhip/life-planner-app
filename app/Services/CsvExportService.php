@@ -118,7 +118,7 @@ class CsvExportService
         $csv = stream_get_contents($output);
         fclose($output);
 
-        return $csv;
+        return rtrim($csv);
     }
 
     /**

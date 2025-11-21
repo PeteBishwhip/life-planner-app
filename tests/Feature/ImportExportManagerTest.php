@@ -113,10 +113,8 @@ END:VEVENT
 END:VCALENDAR
 ICS;
 
-        // Create a real temporary file for testing file I/O
-        $tempPath = sys_get_temp_dir().'/test-'.uniqid().'.ics';
-        file_put_contents($tempPath, $icsContent);
-        $file = new \Illuminate\Http\UploadedFile($tempPath, 'test.ics', 'text/calendar', null, true);
+        // Use UploadedFile::fake() without Storage::fake() so file I/O works
+        $file = UploadedFile::fake()->createWithContent('test.ics', $icsContent);
 
         Livewire::test(ImportExportManager::class)
             ->set('importFile', $file)
@@ -124,11 +122,6 @@ ICS;
             ->set('importType', 'ics')
             ->call('import')
             ->assertSet('importResult.success', true);
-
-        // Clean up
-        if (file_exists($tempPath)) {
-            unlink($tempPath);
-        }
 
         // Assert import log was created
         $this->assertDatabaseHas('import_logs', [
@@ -209,10 +202,8 @@ ICS;
         // Create an invalid ICS file
         $icsContent = 'INVALID ICS CONTENT';
 
-        // Create a real temporary file for testing file I/O
-        $tempPath = sys_get_temp_dir().'/invalid-'.uniqid().'.ics';
-        file_put_contents($tempPath, $icsContent);
-        $file = new \Illuminate\Http\UploadedFile($tempPath, 'invalid.ics', 'text/calendar', null, true);
+        // Use UploadedFile::fake() without Storage::fake() so file I/O works
+        $file = UploadedFile::fake()->createWithContent('invalid.ics', $icsContent);
 
         Livewire::test(ImportExportManager::class)
             ->set('importFile', $file)
@@ -220,11 +211,6 @@ ICS;
             ->set('importType', 'ics')
             ->call('import')
             ->assertSet('importResult.success', true); // Completes but with 0 records
-
-        // Clean up
-        if (file_exists($tempPath)) {
-            unlink($tempPath);
-        }
     }
 
     #[Test]
@@ -245,10 +231,8 @@ END:VEVENT
 END:VCALENDAR
 ICS;
 
-        // Create a real temporary file for testing file I/O
-        $tempPath = sys_get_temp_dir().'/test-'.uniqid().'.ics';
-        file_put_contents($tempPath, $icsContent);
-        $file = new \Illuminate\Http\UploadedFile($tempPath, 'test.ics', 'text/calendar', null, true);
+        // Use UploadedFile::fake() without Storage::fake() so file I/O works
+        $file = UploadedFile::fake()->createWithContent('test.ics', $icsContent);
 
         Livewire::test(ImportExportManager::class)
             ->set('importFile', $file)
@@ -256,11 +240,6 @@ ICS;
             ->set('importType', 'ics')
             ->call('import')
             ->assertDispatched('appointments-updated');
-
-        // Clean up
-        if (file_exists($tempPath)) {
-            unlink($tempPath);
-        }
     }
 
     #[Test]
