@@ -47,11 +47,9 @@ class IcsImportService
         ]);
 
         try {
-            $calendar = Vcalendar::factory()->setConfig(
-                new \Kigkonsult\Icalcreator\Util\Config([
-                    'unique_id' => 'life-planner-app',
-                ])
-            );
+            $calendar = Vcalendar::factory([
+                Vcalendar::UNIQUE_ID => 'life-planner-app',
+            ]);
 
             // Parse the ICS file
             $calendar->parse($filePath);

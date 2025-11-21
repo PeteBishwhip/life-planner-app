@@ -6,7 +6,6 @@ use App\Models\Calendar;
 use App\Models\User;
 use App\Services\IcsImportService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class IcsImportServiceTest extends TestCase
@@ -45,8 +44,11 @@ END:VCALENDAR
 ICS;
 
         // Store the ICS file temporarily
-        Storage::fake('temp');
-        $path = storage_path('app/temp/test-import.ics');
+        $tempDir = storage_path('app/temp');
+        if (! is_dir($tempDir)) {
+            mkdir($tempDir, 0755, true);
+        }
+        $path = $tempDir.'/test-import.ics';
         file_put_contents($path, $icsContent);
 
         // Import the file
@@ -87,7 +89,11 @@ END:VEVENT
 END:VCALENDAR
 ICS;
 
-        $path = storage_path('app/temp/all-day.ics');
+        $tempDir = storage_path('app/temp');
+        if (! is_dir($tempDir)) {
+            mkdir($tempDir, 0755, true);
+        }
+        $path = $tempDir.'/all-day.ics';
         file_put_contents($path, $icsContent);
 
         $service = new IcsImportService($this->user, $this->calendar);
@@ -120,7 +126,11 @@ END:VEVENT
 END:VCALENDAR
 ICS;
 
-        $path = storage_path('app/temp/invalid.ics');
+        $tempDir = storage_path('app/temp');
+        if (! is_dir($tempDir)) {
+            mkdir($tempDir, 0755, true);
+        }
+        $path = $tempDir.'/invalid.ics';
         file_put_contents($path, $icsContent);
 
         $service = new IcsImportService($this->user, $this->calendar);
@@ -149,7 +159,11 @@ END:VEVENT
 END:VCALENDAR
 ICS;
 
-        $path = storage_path('app/temp/test.ics');
+        $tempDir = storage_path('app/temp');
+        if (! is_dir($tempDir)) {
+            mkdir($tempDir, 0755, true);
+        }
+        $path = $tempDir.'/test.ics';
         file_put_contents($path, $icsContent);
 
         $service = new IcsImportService($this->user, $this->calendar);
@@ -195,7 +209,11 @@ END:VEVENT
 END:VCALENDAR
 ICS;
 
-        $path = storage_path('app/temp/multiple.ics');
+        $tempDir = storage_path('app/temp');
+        if (! is_dir($tempDir)) {
+            mkdir($tempDir, 0755, true);
+        }
+        $path = $tempDir.'/multiple.ics';
         file_put_contents($path, $icsContent);
 
         $service = new IcsImportService($this->user, $this->calendar);

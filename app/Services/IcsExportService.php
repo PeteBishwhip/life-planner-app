@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Spatie\IcalendarGenerator\Components\Calendar as ICalendar;
 use Spatie\IcalendarGenerator\Components\Event;
 use Spatie\IcalendarGenerator\Enums\RecurrenceFrequency;
+use Spatie\IcalendarGenerator\ValueObjects\RRule;
 
 class IcsExportService
 {
@@ -141,10 +142,10 @@ class IcsExportService
 
         // Map frequency
         $frequency = match (strtolower($recurrenceRule['freq'])) {
-            'daily' => RecurrenceFrequency::daily(),
-            'weekly' => RecurrenceFrequency::weekly(),
-            'monthly' => RecurrenceFrequency::monthly(),
-            'yearly' => RecurrenceFrequency::yearly(),
+            'daily' => RecurrenceFrequency::Daily,
+            'weekly' => RecurrenceFrequency::Weekly,
+            'monthly' => RecurrenceFrequency::Monthly,
+            'yearly' => RecurrenceFrequency::Yearly,
             default => null,
         };
 
@@ -152,23 +153,26 @@ class IcsExportService
             return;
         }
 
-        $event->rrule($frequency);
+        // Build RRule
+        $rrule = RRule::frequency($frequency);
 
         // Add interval if specified
         if (isset($recurrenceRule['interval']) && $recurrenceRule['interval'] > 1) {
-            $event->rrule($frequency, $recurrenceRule['interval']);
+            $rrule = $rrule->interval($recurrenceRule['interval']);
         }
 
         // Add until date if specified
         if (isset($recurrenceRule['until'])) {
             $until = Carbon::parse($recurrenceRule['until']);
-            $event->rrule($frequency, interval: $recurrenceRule['interval'] ?? 1, until: $until);
+            $rrule = $rrule->until($until);
         }
 
         // Add count if specified
         if (isset($recurrenceRule['count'])) {
-            $event->rrule($frequency, interval: $recurrenceRule['interval'] ?? 1, times: $recurrenceRule['count']);
+            $rrule = $rrule->times($recurrenceRule['count']);
         }
+
+        $event->rrule($rrule);
     }
 
     /**
