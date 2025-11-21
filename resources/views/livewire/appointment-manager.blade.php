@@ -4,7 +4,7 @@
             <div class="flex min-h-screen items-end justify-center px-4 pb-20 pt-4 text-center sm:block sm:p-0">
                 <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" wire:click="close"></div>
 
-                <div class="inline-block transform overflow-hidden rounded-lg bg-white text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:align-middle">
+                <div class="inline-block w-full transform overflow-hidden rounded-t-xl bg-white text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:rounded-lg sm:align-middle">
                     <form wire:submit="save">
                         <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                             <h3 class="text-lg font-medium leading-6 text-gray-900 mb-4">

@@ -12,6 +12,8 @@ use Livewire\Component;
 
 class AppointmentManager extends Component
 {
+    protected $listeners = ['open-appointment-modal' => 'open'];
+
     public ?int $appointmentId = null;
 
     public ?int $calendar_id = null;

@@ -32,7 +32,12 @@ class CalendarDashboard extends Component
 
     public function render()
     {
-        $calendars = auth()->user()->calendars;
+        // Cache calendars for 1 hour to reduce queries
+        $calendars = cache()->remember(
+            'user_calendars_' . auth()->id(),
+            3600,
+            fn () => auth()->user()->calendars()->get()
+        );
 
         $appointments = $this->getAppointmentsForCurrentView();
 
@@ -111,13 +116,32 @@ class CalendarDashboard extends Component
 
     protected function getAppointmentsForCurrentView()
     {
+        // Return empty collection if no calendars are visible
+        if (empty($this->visibleCalendars)) {
+            return collect();
+        }
+
         [$startDate, $endDate] = $this->getDateRange();
 
+        // Optimize query with select and eager loading
         return Appointment::query()
+            ->select([
+                'id',
+                'calendar_id',
+                'user_id',
+                'title',
+                'description',
+                'location',
+                'start_datetime',
+                'end_datetime',
+                'is_all_day',
+                'color',
+                'status',
+            ])
             ->whereIn('calendar_id', $this->visibleCalendars)
             ->where('user_id', auth()->id())
             ->betweenDates($startDate, $endDate)
-            ->with(['calendar'])
+            ->with(['calendar:id,name,color'])
             ->orderBy('start_datetime', 'asc')
             ->get();
     }
