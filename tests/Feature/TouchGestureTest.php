@@ -6,7 +6,6 @@ use Tests\TestCase;
 
 class TouchGestureTest extends TestCase
 {
-
     /** @test */
     public function touch_gestures_javascript_file_exists(): void
     {
