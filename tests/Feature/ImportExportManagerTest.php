@@ -113,8 +113,8 @@ END:VEVENT
 END:VCALENDAR
 ICS;
 
-        // Ensure storage/app/temp directory exists
-        $tempDir = storage_path('app/temp');
+        // Ensure storage/app/private/temp directory exists (where Livewire stores uploads)
+        $tempDir = storage_path('app/private/temp');
         if (! is_dir($tempDir)) {
             mkdir($tempDir, 0755, true);
         }
@@ -214,8 +214,8 @@ ICS;
         // Create an invalid ICS file
         $icsContent = 'INVALID ICS CONTENT';
 
-        // Ensure storage/app/temp directory exists
-        $tempDir = storage_path('app/temp');
+        // Ensure storage/app/private/temp directory exists (where Livewire stores uploads)
+        $tempDir = storage_path('app/private/temp');
         if (! is_dir($tempDir)) {
             mkdir($tempDir, 0755, true);
         }
@@ -255,8 +255,8 @@ END:VEVENT
 END:VCALENDAR
 ICS;
 
-        // Ensure storage/app/temp directory exists
-        $tempDir = storage_path('app/temp');
+        // Ensure storage/app/private/temp directory exists (where Livewire stores uploads)
+        $tempDir = storage_path('app/private/temp');
         if (! is_dir($tempDir)) {
             mkdir($tempDir, 0755, true);
         }
