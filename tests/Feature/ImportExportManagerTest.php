@@ -27,6 +27,19 @@ class ImportExportManagerTest extends TestCase
 
         $this->user = User::factory()->create();
         $this->calendar = Calendar::factory()->create(['user_id' => $this->user->id]);
+
+        // Ensure temp directory exists for file uploads
+        Storage::makeDirectory('temp');
+    }
+
+    protected function tearDown(): void
+    {
+        // Clean up temp directory after each test
+        if (Storage::exists('temp')) {
+            Storage::deleteDirectory('temp');
+        }
+
+        parent::tearDown();
     }
 
     #[Test]
@@ -113,8 +126,6 @@ END:VEVENT
 END:VCALENDAR
 ICS;
 
-        // Fake default storage disk (creates real files at storage/framework/testing/disks/)
-        Storage::fake();
         $file = UploadedFile::fake()->createWithContent('test.ics', $icsContent);
 
         Livewire::test(ImportExportManager::class)
@@ -203,8 +214,6 @@ ICS;
         // Create an invalid ICS file
         $icsContent = 'INVALID ICS CONTENT';
 
-        // Fake default storage disk (creates real files at storage/framework/testing/disks/)
-        Storage::fake();
         $file = UploadedFile::fake()->createWithContent('invalid.ics', $icsContent);
 
         Livewire::test(ImportExportManager::class)
@@ -233,8 +242,6 @@ END:VEVENT
 END:VCALENDAR
 ICS;
 
-        // Fake default storage disk (creates real files at storage/framework/testing/disks/)
-        Storage::fake();
         $file = UploadedFile::fake()->createWithContent('test.ics', $icsContent);
 
         Livewire::test(ImportExportManager::class)
