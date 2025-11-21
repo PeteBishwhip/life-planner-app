@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Services\CsvExportService;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class CsvExportServiceTest extends TestCase
@@ -32,7 +33,7 @@ class CsvExportServiceTest extends TestCase
         $this->service = new CsvExportService;
     }
 
-    /** @test */
+    #[Test]
     public function it_can_export_calendar_to_csv_format()
     {
         Appointment::factory()->create([
@@ -50,7 +51,7 @@ class CsvExportServiceTest extends TestCase
         $this->assertStringContainsString('Test Calendar', $csvContent);
     }
 
-    /** @test */
+    #[Test]
     public function it_includes_all_required_columns_in_csv_header()
     {
         $csvContent = $this->service->exportCalendar($this->calendar);
@@ -80,30 +81,38 @@ class CsvExportServiceTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function it_exports_multiple_appointments()
     {
-        // Ensure we start with a clean slate
-        $initialCount = $this->calendar->appointments()->count();
-        $this->assertEquals(0, $initialCount, 'Calendar should start with no appointments');
+        // Ensure we start with a clean slate - check total appointments in database
+        $this->assertEquals(0, Appointment::count(), 'Database should have no appointments');
+        $this->assertEquals(0, $this->calendar->appointments()->count(), 'Calendar should start with no appointments');
 
-        Appointment::factory()->count(3)->create([
+        // Create exactly 3 appointments
+        $created = Appointment::factory()->count(3)->create([
             'calendar_id' => $this->calendar->id,
             'user_id' => $this->user->id,
         ]);
 
-        // Explicitly refresh the calendar to ensure we get a clean count
-        $this->calendar->refresh();
-        $this->assertEquals(3, $this->calendar->appointments()->count(), 'Should have exactly 3 appointments');
+        // Verify exactly 3 were created
+        $this->assertEquals(3, $created->count(), 'Factory should create exactly 3 appointments');
+        $this->assertEquals(3, Appointment::count(), 'Database should have exactly 3 appointments total');
+        $this->assertEquals(3, $this->calendar->fresh()->appointments()->count(), 'Calendar should have exactly 3 appointments');
 
         $csvContent = $this->service->exportCalendar($this->calendar);
 
         $lines = array_filter(explode("\n", $csvContent), fn ($line) => trim($line) !== '');
+
+        // Debug if count is wrong
+        if (count($lines) !== 4) {
+            $this->fail('Expected 4 lines (1 header + 3 appointments), got '.count($lines).'. Appointments in DB: '.Appointment::count());
+        }
+
         // 1 header + 3 appointments = 4 lines
         $this->assertCount(4, $lines);
     }
 
-    /** @test */
+    #[Test]
     public function it_formats_all_day_events_correctly()
     {
         Appointment::factory()->create([
@@ -121,7 +130,7 @@ class CsvExportServiceTest extends TestCase
         $this->assertStringContainsString('Yes', $csvContent); // All Day column should show "Yes"
     }
 
-    /** @test */
+    #[Test]
     public function it_exports_appointments_with_date_range_filter()
     {
         Appointment::factory()->create([
@@ -148,7 +157,7 @@ class CsvExportServiceTest extends TestCase
         $this->assertStringNotContainsString('March Event', $csvContent);
     }
 
-    /** @test */
+    #[Test]
     public function it_exports_appointment_with_all_details()
     {
         Appointment::factory()->create([
@@ -172,7 +181,7 @@ class CsvExportServiceTest extends TestCase
         $this->assertStringContainsString('scheduled', $csvContent);
     }
 
-    /** @test */
+    #[Test]
     public function it_exports_recurring_appointments_with_pattern_description()
     {
         Appointment::factory()->create([
@@ -195,7 +204,7 @@ class CsvExportServiceTest extends TestCase
         $this->assertStringContainsString('Weekly', $csvContent); // Recurrence Pattern
     }
 
-    /** @test */
+    #[Test]
     public function it_can_export_multiple_calendars_combined()
     {
         $calendar2 = Calendar::factory()->create([
@@ -223,7 +232,7 @@ class CsvExportServiceTest extends TestCase
         $this->assertStringContainsString('Second Calendar', $csvContent);
     }
 
-    /** @test */
+    #[Test]
     public function it_generates_valid_filename()
     {
         $filename = $this->service->generateFilename($this->calendar);
@@ -232,7 +241,7 @@ class CsvExportServiceTest extends TestCase
         $this->assertStringContainsString(Carbon::now()->format('Y-m-d'), $filename);
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_correct_mime_type()
     {
         $mimeType = $this->service->getMimeType();
@@ -240,7 +249,7 @@ class CsvExportServiceTest extends TestCase
         $this->assertEquals('text/csv', $mimeType);
     }
 
-    /** @test */
+    #[Test]
     public function it_handles_empty_calendar_export()
     {
         $csvContent = $this->service->exportCalendar($this->calendar);

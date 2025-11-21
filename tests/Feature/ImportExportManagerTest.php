@@ -10,6 +10,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ImportExportManagerTest extends TestCase
@@ -28,7 +29,7 @@ class ImportExportManagerTest extends TestCase
         $this->calendar = Calendar::factory()->create(['user_id' => $this->user->id]);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_render_the_component()
     {
         $this->actingAs($this->user);
@@ -41,7 +42,7 @@ class ImportExportManagerTest extends TestCase
             ->assertSee('Export Calendar');
     }
 
-    /** @test */
+    #[Test]
     public function it_can_open_and_close_import_modal()
     {
         $this->actingAs($this->user);
@@ -54,7 +55,7 @@ class ImportExportManagerTest extends TestCase
             ->assertSet('showImportModal', false);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_open_and_close_export_modal()
     {
         $this->actingAs($this->user);
@@ -67,7 +68,7 @@ class ImportExportManagerTest extends TestCase
             ->assertSet('showExportModal', false);
     }
 
-    /** @test */
+    #[Test]
     public function it_validates_import_file_is_required()
     {
         $this->actingAs($this->user);
@@ -78,7 +79,7 @@ class ImportExportManagerTest extends TestCase
             ->assertHasErrors(['importFile' => 'required']);
     }
 
-    /** @test */
+    #[Test]
     public function it_validates_selected_calendar_is_required()
     {
         $this->actingAs($this->user);
@@ -93,7 +94,7 @@ class ImportExportManagerTest extends TestCase
             ->assertHasErrors(['selectedCalendarForImport' => 'required']);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_import_ics_file()
     {
         $this->actingAs($this->user);
@@ -112,8 +113,10 @@ END:VEVENT
 END:VCALENDAR
 ICS;
 
-        Storage::fake('temp');
-        $file = UploadedFile::fake()->createWithContent('test.ics', $icsContent);
+        // Create a real temporary file for testing file I/O
+        $tempPath = sys_get_temp_dir().'/test-'.uniqid().'.ics';
+        file_put_contents($tempPath, $icsContent);
+        $file = new \Illuminate\Http\UploadedFile($tempPath, 'test.ics', 'text/calendar', null, true);
 
         Livewire::test(ImportExportManager::class)
             ->set('importFile', $file)
@@ -121,6 +124,11 @@ ICS;
             ->set('importType', 'ics')
             ->call('import')
             ->assertSet('importResult.success', true);
+
+        // Clean up
+        if (file_exists($tempPath)) {
+            unlink($tempPath);
+        }
 
         // Assert import log was created
         $this->assertDatabaseHas('import_logs', [
@@ -137,7 +145,7 @@ ICS;
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_displays_import_history()
     {
         $this->actingAs($this->user);
@@ -154,7 +162,7 @@ ICS;
             ->assertCount('importLogs', 3);
     }
 
-    /** @test */
+    #[Test]
     public function it_loads_import_logs_on_mount()
     {
         $this->actingAs($this->user);
@@ -168,7 +176,7 @@ ICS;
         $this->assertCount(5, $component->get('importLogs'));
     }
 
-    /** @test */
+    #[Test]
     public function it_sets_default_calendar_for_import_on_mount()
     {
         $this->actingAs($this->user);
@@ -177,7 +185,7 @@ ICS;
             ->assertSet('selectedCalendarForImport', $this->calendar->id);
     }
 
-    /** @test */
+    #[Test]
     public function it_displays_all_user_calendars()
     {
         $this->actingAs($this->user);
@@ -193,7 +201,7 @@ ICS;
             ->assertSee($calendar2->name);
     }
 
-    /** @test */
+    #[Test]
     public function it_handles_import_errors_gracefully()
     {
         $this->actingAs($this->user);
@@ -201,8 +209,10 @@ ICS;
         // Create an invalid ICS file
         $icsContent = 'INVALID ICS CONTENT';
 
-        Storage::fake('temp');
-        $file = UploadedFile::fake()->createWithContent('invalid.ics', $icsContent);
+        // Create a real temporary file for testing file I/O
+        $tempPath = sys_get_temp_dir().'/invalid-'.uniqid().'.ics';
+        file_put_contents($tempPath, $icsContent);
+        $file = new \Illuminate\Http\UploadedFile($tempPath, 'invalid.ics', 'text/calendar', null, true);
 
         Livewire::test(ImportExportManager::class)
             ->set('importFile', $file)
@@ -210,9 +220,14 @@ ICS;
             ->set('importType', 'ics')
             ->call('import')
             ->assertSet('importResult.success', true); // Completes but with 0 records
+
+        // Clean up
+        if (file_exists($tempPath)) {
+            unlink($tempPath);
+        }
     }
 
-    /** @test */
+    #[Test]
     public function it_emits_event_after_successful_import()
     {
         $this->actingAs($this->user);
@@ -230,8 +245,10 @@ END:VEVENT
 END:VCALENDAR
 ICS;
 
-        Storage::fake('temp');
-        $file = UploadedFile::fake()->createWithContent('test.ics', $icsContent);
+        // Create a real temporary file for testing file I/O
+        $tempPath = sys_get_temp_dir().'/test-'.uniqid().'.ics';
+        file_put_contents($tempPath, $icsContent);
+        $file = new \Illuminate\Http\UploadedFile($tempPath, 'test.ics', 'text/calendar', null, true);
 
         Livewire::test(ImportExportManager::class)
             ->set('importFile', $file)
@@ -239,9 +256,14 @@ ICS;
             ->set('importType', 'ics')
             ->call('import')
             ->assertDispatched('appointments-updated');
+
+        // Clean up
+        if (file_exists($tempPath)) {
+            unlink($tempPath);
+        }
     }
 
-    /** @test */
+    #[Test]
     public function it_only_shows_user_own_calendars()
     {
         $this->actingAs($this->user);
@@ -258,7 +280,7 @@ ICS;
             ->assertDontSee($otherCalendar->name);
     }
 
-    /** @test */
+    #[Test]
     public function it_limits_import_logs_to_recent_10()
     {
         $this->actingAs($this->user);

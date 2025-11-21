@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Services\PdfExportService;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class PdfExportServiceTest extends TestCase
@@ -33,7 +34,7 @@ class PdfExportServiceTest extends TestCase
         $this->service = new PdfExportService;
     }
 
-    /** @test */
+    #[Test]
     public function it_can_export_calendar_in_month_view()
     {
         Appointment::factory()->create([
@@ -51,7 +52,7 @@ class PdfExportServiceTest extends TestCase
         $this->assertInstanceOf(\Barryvdh\DomPDF\PDF::class, $pdf);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_export_calendar_in_list_view()
     {
         Appointment::factory()->create([
@@ -70,7 +71,7 @@ class PdfExportServiceTest extends TestCase
         $this->assertInstanceOf(\Barryvdh\DomPDF\PDF::class, $pdf);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_export_multiple_calendars_combined()
     {
         $calendar2 = Calendar::factory()->create([
@@ -98,7 +99,7 @@ class PdfExportServiceTest extends TestCase
         $this->assertInstanceOf(\Barryvdh\DomPDF\PDF::class, $pdf);
     }
 
-    /** @test */
+    #[Test]
     public function it_generates_calendar_grid_correctly()
     {
         $month = Carbon::parse('2025-01-01');
@@ -124,7 +125,7 @@ class PdfExportServiceTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function it_generates_valid_filename()
     {
         $filename = $this->service->generateFilename($this->calendar, 'month');
@@ -134,7 +135,7 @@ class PdfExportServiceTest extends TestCase
         $this->assertStringContainsString(Carbon::now()->format('Y-m-d'), $filename);
     }
 
-    /** @test */
+    #[Test]
     public function it_generates_combined_filename()
     {
         $filename = $this->service->generateCombinedFilename();
@@ -144,7 +145,7 @@ class PdfExportServiceTest extends TestCase
         $this->assertStringContainsString(Carbon::now()->format('Y-m-d'), $filename);
     }
 
-    /** @test */
+    #[Test]
     public function it_exports_appointments_with_date_range_filter()
     {
         // Create appointments in different months
@@ -171,7 +172,7 @@ class PdfExportServiceTest extends TestCase
         $this->assertNotNull($pdf);
     }
 
-    /** @test */
+    #[Test]
     public function it_uses_correct_paper_format()
     {
         $month = Carbon::parse('2025-01-01');
@@ -181,7 +182,7 @@ class PdfExportServiceTest extends TestCase
         $this->assertNotNull($pdf);
     }
 
-    /** @test */
+    #[Test]
     public function it_handles_empty_calendar_export()
     {
         // Export a calendar with no appointments

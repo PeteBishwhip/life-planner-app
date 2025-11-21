@@ -4,13 +4,14 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class PWAFunctionalityTest extends TestCase
 {
     use RefreshDatabase; // Needed for app_layout tests that require authentication
 
-    /** @test */
+    #[Test]
     public function manifest_file_exists_and_is_accessible(): void
     {
         $manifestPath = public_path('manifest.json');
@@ -22,7 +23,7 @@ class PWAFunctionalityTest extends TestCase
         $this->assertJson($content);
     }
 
-    /** @test */
+    #[Test]
     public function manifest_contains_required_fields(): void
     {
         $manifestPath = public_path('manifest.json');
@@ -44,7 +45,7 @@ class PWAFunctionalityTest extends TestCase
         $this->assertIsArray($manifest['icons']);
     }
 
-    /** @test */
+    #[Test]
     public function manifest_has_multiple_icon_sizes(): void
     {
         $manifestPath = public_path('manifest.json');
@@ -61,7 +62,7 @@ class PWAFunctionalityTest extends TestCase
         $this->assertContains('512x512', $sizes);
     }
 
-    /** @test */
+    #[Test]
     public function manifest_has_shortcuts(): void
     {
         $manifestPath = public_path('manifest.json');
@@ -73,7 +74,7 @@ class PWAFunctionalityTest extends TestCase
         $this->assertGreaterThan(0, count($manifest['shortcuts']));
     }
 
-    /** @test */
+    #[Test]
     public function service_worker_file_exists(): void
     {
         $serviceWorkerPath = public_path('service-worker.js');
@@ -81,7 +82,7 @@ class PWAFunctionalityTest extends TestCase
         $this->assertFileExists($serviceWorkerPath);
     }
 
-    /** @test */
+    #[Test]
     public function service_worker_has_cache_strategy(): void
     {
         $serviceWorkerPath = public_path('service-worker.js');
@@ -93,7 +94,7 @@ class PWAFunctionalityTest extends TestCase
         $this->assertStringContainsString('cache.addAll', $content);
     }
 
-    /** @test */
+    #[Test]
     public function service_worker_handles_install_event(): void
     {
         $serviceWorkerPath = public_path('service-worker.js');
@@ -103,7 +104,7 @@ class PWAFunctionalityTest extends TestCase
         $this->assertStringContainsString('PRECACHE_ASSETS', $content);
     }
 
-    /** @test */
+    #[Test]
     public function service_worker_handles_activate_event(): void
     {
         $serviceWorkerPath = public_path('service-worker.js');
@@ -113,7 +114,7 @@ class PWAFunctionalityTest extends TestCase
         $this->assertStringContainsString('caches.keys', $content);
     }
 
-    /** @test */
+    #[Test]
     public function service_worker_handles_fetch_event(): void
     {
         $serviceWorkerPath = public_path('service-worker.js');
@@ -123,7 +124,7 @@ class PWAFunctionalityTest extends TestCase
         $this->assertStringContainsString('caches.match', $content);
     }
 
-    /** @test */
+    #[Test]
     public function offline_page_exists(): void
     {
         $offlinePath = public_path('offline.html');
@@ -134,7 +135,7 @@ class PWAFunctionalityTest extends TestCase
         $this->assertStringContainsString('offline', strtolower($content));
     }
 
-    /** @test */
+    #[Test]
     public function offline_page_has_retry_functionality(): void
     {
         $offlinePath = public_path('offline.html');
@@ -144,7 +145,7 @@ class PWAFunctionalityTest extends TestCase
         $this->assertStringContainsString('window.location.reload', $content);
     }
 
-    /** @test */
+    #[Test]
     public function app_layout_includes_pwa_meta_tags(): void
     {
         $user = User::factory()->create();
@@ -160,7 +161,7 @@ class PWAFunctionalityTest extends TestCase
         $response->assertSee('manifest.json', false);
     }
 
-    /** @test */
+    #[Test]
     public function app_layout_registers_service_worker(): void
     {
         $user = User::factory()->create();
@@ -175,7 +176,7 @@ class PWAFunctionalityTest extends TestCase
         $response->assertSee('register(\'/service-worker.js\')', false);
     }
 
-    /** @test */
+    #[Test]
     public function service_worker_uses_network_first_strategy(): void
     {
         $serviceWorkerPath = public_path('service-worker.js');
@@ -186,7 +187,7 @@ class PWAFunctionalityTest extends TestCase
         $this->assertStringContainsString('.catch', $content);
     }
 
-    /** @test */
+    #[Test]
     public function service_worker_handles_offline_navigation(): void
     {
         $serviceWorkerPath = public_path('service-worker.js');
@@ -197,7 +198,7 @@ class PWAFunctionalityTest extends TestCase
         $this->assertStringContainsString('mode === \'navigate\'', $content);
     }
 
-    /** @test */
+    #[Test]
     public function manifest_specifies_portrait_orientation(): void
     {
         $manifestPath = public_path('manifest.json');
@@ -208,7 +209,7 @@ class PWAFunctionalityTest extends TestCase
         $this->assertEquals('portrait-primary', $manifest['orientation']);
     }
 
-    /** @test */
+    #[Test]
     public function manifest_has_productivity_category(): void
     {
         $manifestPath = public_path('manifest.json');

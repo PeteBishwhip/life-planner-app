@@ -6,6 +6,7 @@ use App\Models\Calendar;
 use App\Models\User;
 use App\Services\IcsImportService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class IcsImportServiceTest extends TestCase
@@ -24,7 +25,7 @@ class IcsImportServiceTest extends TestCase
         $this->calendar = Calendar::factory()->create(['user_id' => $this->user->id]);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_import_a_simple_ics_file()
     {
         // Create a simple ICS file content
@@ -73,7 +74,7 @@ ICS;
         unlink($path);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_import_an_all_day_event()
     {
         $icsContent = <<<'ICS'
@@ -111,7 +112,7 @@ ICS;
         unlink($path);
     }
 
-    /** @test */
+    #[Test]
     public function it_handles_import_errors_gracefully()
     {
         // Create an ICS file with invalid content
@@ -143,7 +144,7 @@ ICS;
         unlink($path);
     }
 
-    /** @test */
+    #[Test]
     public function it_creates_import_log_with_correct_information()
     {
         $icsContent = <<<'ICS'
@@ -181,7 +182,7 @@ ICS;
         unlink($path);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_import_multiple_events_from_one_file()
     {
         $icsContent = <<<'ICS'

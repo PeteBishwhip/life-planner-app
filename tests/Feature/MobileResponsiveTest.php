@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Calendar;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class MobileResponsiveTest extends TestCase
@@ -26,7 +27,7 @@ class MobileResponsiveTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function calendar_dashboard_renders_with_mobile_optimized_controls(): void
     {
         $response = $this->actingAs($this->user)
@@ -40,7 +41,7 @@ class MobileResponsiveTest extends TestCase
         $response->assertSee('md:space-y-6'); // Responsive spacing
     }
 
-    /** @test */
+    #[Test]
     public function view_switcher_buttons_have_touch_friendly_sizes(): void
     {
         $response = $this->actingAs($this->user)
@@ -56,7 +57,7 @@ class MobileResponsiveTest extends TestCase
         $response->assertSee('sm:text-sm'); // Desktop
     }
 
-    /** @test */
+    #[Test]
     public function calendar_filters_are_collapsible_on_mobile(): void
     {
         $response = $this->actingAs($this->user)
@@ -72,7 +73,7 @@ class MobileResponsiveTest extends TestCase
         $response->assertSee('md:hidden'); // Hide on desktop
     }
 
-    /** @test */
+    #[Test]
     public function navigation_buttons_show_icons_on_mobile_text_on_desktop(): void
     {
         $response = $this->actingAs($this->user)
@@ -85,7 +86,7 @@ class MobileResponsiveTest extends TestCase
         $response->assertSee('hidden sm:inline'); // Text hidden on mobile
     }
 
-    /** @test */
+    #[Test]
     public function fab_button_is_present_and_mobile_only(): void
     {
         $response = $this->actingAs($this->user)
@@ -99,7 +100,7 @@ class MobileResponsiveTest extends TestCase
         $response->assertSee('open-appointment-modal'); // Event trigger
     }
 
-    /** @test */
+    #[Test]
     public function appointment_modal_is_mobile_optimized(): void
     {
         // Check the appointment manager blade file has mobile-optimized classes
@@ -112,7 +113,7 @@ class MobileResponsiveTest extends TestCase
         $this->assertStringContainsString('w-full', $content); // Full width on mobile
     }
 
-    /** @test */
+    #[Test]
     public function month_view_cells_are_smaller_on_mobile(): void
     {
         $response = $this->actingAs($this->user)
@@ -126,7 +127,7 @@ class MobileResponsiveTest extends TestCase
         $response->assertSee('md:min-h-[100px]'); // Desktop
     }
 
-    /** @test */
+    #[Test]
     public function day_headers_show_single_letter_on_mobile(): void
     {
         $response = $this->actingAs($this->user)
@@ -139,7 +140,7 @@ class MobileResponsiveTest extends TestCase
         $response->assertSee('hidden sm:inline'); // Full name shown on desktop
     }
 
-    /** @test */
+    #[Test]
     public function padding_is_optimized_for_mobile(): void
     {
         $response = $this->actingAs($this->user)
@@ -153,7 +154,7 @@ class MobileResponsiveTest extends TestCase
         $response->assertSee('md:p-6'); // Desktop padding
     }
 
-    /** @test */
+    #[Test]
     public function touch_targets_meet_minimum_44px_requirement(): void
     {
         $response = $this->actingAs($this->user)

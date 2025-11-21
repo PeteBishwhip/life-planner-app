@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class PerformanceOptimizationTest extends TestCase
@@ -30,7 +31,7 @@ class PerformanceOptimizationTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function calendar_dashboard_caches_user_calendars(): void
     {
         Cache::flush();
@@ -45,7 +46,7 @@ class PerformanceOptimizationTest extends TestCase
         $this->assertTrue(Cache::has($cacheKey));
     }
 
-    /** @test */
+    #[Test]
     public function cached_calendars_reduce_database_queries(): void
     {
         Cache::flush();
@@ -78,7 +79,7 @@ class PerformanceOptimizationTest extends TestCase
         $this->assertEmpty($queries, 'Should use cached calendars without database query');
     }
 
-    /** @test */
+    #[Test]
     public function appointment_query_uses_select_optimization(): void
     {
         Appointment::factory()->count(5)->create([
@@ -105,7 +106,7 @@ class PerformanceOptimizationTest extends TestCase
         $this->assertStringNotContainsString('select *', strtolower($queryString));
     }
 
-    /** @test */
+    #[Test]
     public function appointment_query_eager_loads_calendar_relationship(): void
     {
         Appointment::factory()->count(3)->create([
@@ -130,7 +131,7 @@ class PerformanceOptimizationTest extends TestCase
         $this->assertLessThan(10, $queryCount, 'Query count should be optimized');
     }
 
-    /** @test */
+    #[Test]
     public function calendar_dashboard_returns_empty_collection_when_no_visible_calendars(): void
     {
         // Make calendar invisible
@@ -158,7 +159,7 @@ class PerformanceOptimizationTest extends TestCase
         $this->assertEmpty($appointmentQueries, 'Appointment query should be skipped when no calendars visible');
     }
 
-    /** @test */
+    #[Test]
     public function performance_indexes_migration_exists(): void
     {
         $migrationPath = database_path('migrations');
@@ -171,7 +172,7 @@ class PerformanceOptimizationTest extends TestCase
         $this->assertNotEmpty($indexMigration, 'Performance indexes migration should exist');
     }
 
-    /** @test */
+    #[Test]
     public function performance_indexes_migration_adds_appointments_indexes(): void
     {
         $migrationPath = database_path('migrations');
@@ -192,7 +193,7 @@ class PerformanceOptimizationTest extends TestCase
         $this->assertStringContainsString('end_datetime', $content);
     }
 
-    /** @test */
+    #[Test]
     public function performance_indexes_migration_adds_calendars_indexes(): void
     {
         $migrationPath = database_path('migrations');
@@ -211,7 +212,7 @@ class PerformanceOptimizationTest extends TestCase
         $this->assertStringContainsString('is_visible', $content);
     }
 
-    /** @test */
+    #[Test]
     public function touch_gestures_use_passive_listeners_for_performance(): void
     {
         $touchGesturesPath = resource_path('js/touch-gestures.js');
@@ -223,7 +224,7 @@ class PerformanceOptimizationTest extends TestCase
         $this->assertGreaterThan(0, $passiveCount, 'Touch gestures should use passive event listeners');
     }
 
-    /** @test */
+    #[Test]
     public function assets_are_loaded_via_vite_for_optimization(): void
     {
         $layoutPath = resource_path('views/layouts/app.blade.php');
@@ -235,7 +236,7 @@ class PerformanceOptimizationTest extends TestCase
         $this->assertStringContainsString('resources/js/app.js', $content);
     }
 
-    /** @test */
+    #[Test]
     public function calendar_dashboard_component_has_optimized_query_methods(): void
     {
         $componentPath = app_path('Livewire/CalendarDashboard.php');
@@ -247,7 +248,7 @@ class PerformanceOptimizationTest extends TestCase
         $this->assertStringContainsString('->with([', $content);
     }
 
-    /** @test */
+    #[Test]
     public function appointments_query_filters_by_date_range(): void
     {
         // Create appointments outside and inside date range

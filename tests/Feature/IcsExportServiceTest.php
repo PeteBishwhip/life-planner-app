@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Services\IcsExportService;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class IcsExportServiceTest extends TestCase
@@ -29,7 +30,7 @@ class IcsExportServiceTest extends TestCase
         $this->service = new IcsExportService;
     }
 
-    /** @test */
+    #[Test]
     public function it_can_export_a_calendar_to_ics_format()
     {
         Appointment::factory()->create([
@@ -49,7 +50,7 @@ class IcsExportServiceTest extends TestCase
         $this->assertStringContainsString('END:VCALENDAR', $icsContent);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_export_multiple_appointments()
     {
         Appointment::factory()->count(3)->create([
@@ -64,7 +65,7 @@ class IcsExportServiceTest extends TestCase
         $this->assertEquals(3, $eventCount);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_export_calendar_with_date_range_filter()
     {
         // Create appointments in different dates
@@ -102,7 +103,7 @@ class IcsExportServiceTest extends TestCase
         $this->assertStringNotContainsString('March Event', $icsContent);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_export_all_day_events()
     {
         Appointment::factory()->create([
@@ -121,7 +122,7 @@ class IcsExportServiceTest extends TestCase
         $this->assertStringContainsString('BEGIN:VEVENT', $icsContent);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_export_appointments_with_location_and_description()
     {
         Appointment::factory()->create([
@@ -141,7 +142,7 @@ class IcsExportServiceTest extends TestCase
         $this->assertStringContainsString('Conference Room A', $icsContent);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_export_multiple_calendars_combined()
     {
         $calendar2 = Calendar::factory()->create(['user_id' => $this->user->id]);
@@ -165,7 +166,7 @@ class IcsExportServiceTest extends TestCase
         $this->assertEquals(2, substr_count($icsContent, 'BEGIN:VEVENT'));
     }
 
-    /** @test */
+    #[Test]
     public function it_generates_valid_filename()
     {
         $filename = $this->service->generateFilename($this->calendar);
@@ -174,7 +175,7 @@ class IcsExportServiceTest extends TestCase
         $this->assertStringContainsString(Carbon::now()->format('Y-m-d'), $filename);
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_correct_mime_type()
     {
         $mimeType = $this->service->getMimeType();
@@ -182,7 +183,7 @@ class IcsExportServiceTest extends TestCase
         $this->assertEquals('text/calendar', $mimeType);
     }
 
-    /** @test */
+    #[Test]
     public function it_exports_recurring_appointments()
     {
         Appointment::factory()->create([
