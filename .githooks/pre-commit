@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# Run Laravel Pint before committing
+echo "Running Laravel Pint..."
+./vendor/bin/pint
+
+# Add any files that were modified by Pint
+git add -u
+
+echo "✓ Laravel Pint completed"
