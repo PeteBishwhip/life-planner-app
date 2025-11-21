@@ -113,16 +113,27 @@ END:VEVENT
 END:VCALENDAR
 ICS;
 
-        // Don't fake storage - let it write to real temp directory
-        // UploadedFile::fake() provides the 'name' property Livewire needs
+        // Ensure storage/app/temp directory exists
+        $tempDir = storage_path('app/temp');
+        if (! is_dir($tempDir)) {
+            mkdir($tempDir, 0755, true);
+        }
+
         $file = UploadedFile::fake()->createWithContent('test.ics', $icsContent);
 
-        Livewire::test(ImportExportManager::class)
+        $component = Livewire::test(ImportExportManager::class)
             ->set('importFile', $file)
             ->set('selectedCalendarForImport', $this->calendar->id)
             ->set('importType', 'ics')
-            ->call('import')
-            ->assertSet('importResult.success', true);
+            ->call('import');
+
+        $result = $component->get('importResult');
+
+        if (! $result || ! ($result['success'] ?? false)) {
+            $this->fail('Import failed. Result: '.json_encode($result));
+        }
+
+        $component->assertSet('importResult.success', true);
 
         // Assert import log was created
         $this->assertDatabaseHas('import_logs', [
@@ -203,15 +214,27 @@ ICS;
         // Create an invalid ICS file
         $icsContent = 'INVALID ICS CONTENT';
 
-        // Don't fake storage - let it write to real temp directory
+        // Ensure storage/app/temp directory exists
+        $tempDir = storage_path('app/temp');
+        if (! is_dir($tempDir)) {
+            mkdir($tempDir, 0755, true);
+        }
+
         $file = UploadedFile::fake()->createWithContent('invalid.ics', $icsContent);
 
-        Livewire::test(ImportExportManager::class)
+        $component = Livewire::test(ImportExportManager::class)
             ->set('importFile', $file)
             ->set('selectedCalendarForImport', $this->calendar->id)
             ->set('importType', 'ics')
-            ->call('import')
-            ->assertSet('importResult.success', true); // Completes but with 0 records
+            ->call('import');
+
+        $result = $component->get('importResult');
+
+        if (! $result || ! ($result['success'] ?? false)) {
+            $this->fail('Import failed. Result: '.json_encode($result));
+        }
+
+        $component->assertSet('importResult.success', true); // Completes but with 0 records
     }
 
     #[Test]
@@ -232,8 +255,12 @@ END:VEVENT
 END:VCALENDAR
 ICS;
 
-        // Fake the default storage disk so files are stored in a testable location
-        Storage::fake();
+        // Ensure storage/app/temp directory exists
+        $tempDir = storage_path('app/temp');
+        if (! is_dir($tempDir)) {
+            mkdir($tempDir, 0755, true);
+        }
+
         $file = UploadedFile::fake()->createWithContent('test.ics', $icsContent);
 
         Livewire::test(ImportExportManager::class)
