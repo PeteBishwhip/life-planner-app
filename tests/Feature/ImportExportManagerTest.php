@@ -113,8 +113,8 @@ END:VEVENT
 END:VCALENDAR
 ICS;
 
-        // Fake the default storage disk so files are stored in a testable location
-        Storage::fake();
+        // Don't fake storage - let it write to real temp directory
+        // UploadedFile::fake() provides the 'name' property Livewire needs
         $file = UploadedFile::fake()->createWithContent('test.ics', $icsContent);
 
         Livewire::test(ImportExportManager::class)
@@ -203,8 +203,7 @@ ICS;
         // Create an invalid ICS file
         $icsContent = 'INVALID ICS CONTENT';
 
-        // Fake the default storage disk so files are stored in a testable location
-        Storage::fake();
+        // Don't fake storage - let it write to real temp directory
         $file = UploadedFile::fake()->createWithContent('invalid.ics', $icsContent);
 
         Livewire::test(ImportExportManager::class)
