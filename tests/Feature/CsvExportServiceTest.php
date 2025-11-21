@@ -15,7 +15,9 @@ class CsvExportServiceTest extends TestCase
     use RefreshDatabase;
 
     protected User $user;
+
     protected Calendar $calendar;
+
     protected CsvExportService $service;
 
     protected function setUp(): void
@@ -27,7 +29,7 @@ class CsvExportServiceTest extends TestCase
             'user_id' => $this->user->id,
             'name' => 'Test Calendar',
         ]);
-        $this->service = new CsvExportService();
+        $this->service = new CsvExportService;
     }
 
     /** @test */

@@ -15,7 +15,9 @@ class IcsExportServiceTest extends TestCase
     use RefreshDatabase;
 
     protected User $user;
+
     protected Calendar $calendar;
+
     protected IcsExportService $service;
 
     protected function setUp(): void
@@ -24,7 +26,7 @@ class IcsExportServiceTest extends TestCase
 
         $this->user = User::factory()->create();
         $this->calendar = Calendar::factory()->create(['user_id' => $this->user->id]);
-        $this->service = new IcsExportService();
+        $this->service = new IcsExportService;
     }
 
     /** @test */

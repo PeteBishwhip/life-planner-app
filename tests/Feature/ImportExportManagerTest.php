@@ -17,6 +17,7 @@ class ImportExportManagerTest extends TestCase
     use RefreshDatabase;
 
     protected User $user;
+
     protected Calendar $calendar;
 
     protected function setUp(): void
@@ -96,7 +97,7 @@ class ImportExportManagerTest extends TestCase
     {
         $this->actingAs($this->user);
 
-        $icsContent = <<<ICS
+        $icsContent = <<<'ICS'
 BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Life Planner//Test//EN
@@ -196,7 +197,7 @@ ICS;
         $this->actingAs($this->user);
 
         // Create an invalid ICS file
-        $icsContent = "INVALID ICS CONTENT";
+        $icsContent = 'INVALID ICS CONTENT';
 
         Storage::fake('temp');
         $file = UploadedFile::fake()->createWithContent('invalid.ics', $icsContent);
@@ -214,7 +215,7 @@ ICS;
     {
         $this->actingAs($this->user);
 
-        $icsContent = <<<ICS
+        $icsContent = <<<'ICS'
 BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Life Planner//Test//EN

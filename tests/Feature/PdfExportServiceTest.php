@@ -15,7 +15,9 @@ class PdfExportServiceTest extends TestCase
     use RefreshDatabase;
 
     protected User $user;
+
     protected Calendar $calendar;
+
     protected PdfExportService $service;
 
     protected function setUp(): void
@@ -28,7 +30,7 @@ class PdfExportServiceTest extends TestCase
             'name' => 'Test Calendar',
             'color' => '#3B82F6',
         ]);
-        $this->service = new PdfExportService();
+        $this->service = new PdfExportService;
     }
 
     /** @test */

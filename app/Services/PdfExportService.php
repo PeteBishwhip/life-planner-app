@@ -10,10 +10,6 @@ class PdfExportService
 {
     /**
      * Export a calendar to PDF format (Month view)
-     *
-     * @param Calendar $calendar
-     * @param Carbon|null $month
-     * @return \Barryvdh\DomPDF\PDF
      */
     public function exportMonthView(Calendar $calendar, ?Carbon $month = null): \Barryvdh\DomPDF\PDF
     {
@@ -47,11 +43,6 @@ class PdfExportService
 
     /**
      * Export a calendar to PDF format (List view)
-     *
-     * @param Calendar $calendar
-     * @param Carbon|null $startDate
-     * @param Carbon|null $endDate
-     * @return \Barryvdh\DomPDF\PDF
      */
     public function exportListView(
         Calendar $calendar,
@@ -79,11 +70,6 @@ class PdfExportService
 
     /**
      * Export multiple calendars to PDF format
-     *
-     * @param array $calendars
-     * @param Carbon|null $startDate
-     * @param Carbon|null $endDate
-     * @return \Barryvdh\DomPDF\PDF
      */
     public function exportMultipleCalendars(
         array $calendars,
@@ -119,9 +105,6 @@ class PdfExportService
 
     /**
      * Generate calendar grid for a month
-     *
-     * @param Carbon $month
-     * @return array
      */
     protected function generateCalendarGrid(Carbon $month): array
     {
@@ -149,7 +132,7 @@ class PdfExportService
             $current->addDay();
         }
 
-        if (!empty($week)) {
+        if (! empty($week)) {
             $weeks[] = $week;
         }
 
@@ -158,10 +141,6 @@ class PdfExportService
 
     /**
      * Generate a filename for calendar PDF export
-     *
-     * @param Calendar $calendar
-     * @param string $view
-     * @return string
      */
     public function generateFilename(Calendar $calendar, string $view = 'calendar'): string
     {
@@ -173,8 +152,6 @@ class PdfExportService
 
     /**
      * Generate filename for multiple calendars export
-     *
-     * @return string
      */
     public function generateCombinedFilename(): string
     {

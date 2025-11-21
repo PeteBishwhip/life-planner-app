@@ -14,6 +14,7 @@ class IcsImportServiceTest extends TestCase
     use RefreshDatabase;
 
     protected User $user;
+
     protected Calendar $calendar;
 
     protected function setUp(): void
@@ -28,7 +29,7 @@ class IcsImportServiceTest extends TestCase
     public function it_can_import_a_simple_ics_file()
     {
         // Create a simple ICS file content
-        $icsContent = <<<ICS
+        $icsContent = <<<'ICS'
 BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Life Planner//Test//EN
@@ -73,7 +74,7 @@ ICS;
     /** @test */
     public function it_can_import_an_all_day_event()
     {
-        $icsContent = <<<ICS
+        $icsContent = <<<'ICS'
 BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Life Planner//Test//EN
@@ -108,7 +109,7 @@ ICS;
     public function it_handles_import_errors_gracefully()
     {
         // Create an ICS file with invalid content
-        $icsContent = <<<ICS
+        $icsContent = <<<'ICS'
 BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Life Planner//Test//EN
@@ -135,7 +136,7 @@ ICS;
     /** @test */
     public function it_creates_import_log_with_correct_information()
     {
-        $icsContent = <<<ICS
+        $icsContent = <<<'ICS'
 BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Life Planner//Test//EN
@@ -169,7 +170,7 @@ ICS;
     /** @test */
     public function it_can_import_multiple_events_from_one_file()
     {
-        $icsContent = <<<ICS
+        $icsContent = <<<'ICS'
 BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Life Planner//Test//EN

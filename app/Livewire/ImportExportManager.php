@@ -20,22 +20,33 @@ class ImportExportManager extends Component
 
     // Import properties
     public $importFile;
+
     public $selectedCalendarForImport;
+
     public $importType = 'ics';
+
     public $showImportModal = false;
+
     public $importResult = null;
 
     // Export properties
     public $selectedCalendarForExport;
+
     public $selectedCalendarsForExport = [];
+
     public $exportFormat = 'ics';
+
     public $exportView = 'list';
+
     public $startDate;
+
     public $endDate;
+
     public $showExportModal = false;
 
     // Import logs
     public $importLogs = [];
+
     public $showImportHistory = false;
 
     protected $rules = [
@@ -83,7 +94,7 @@ class ImportExportManager extends Component
 
     public function toggleImportHistory()
     {
-        $this->showImportHistory = !$this->showImportHistory;
+        $this->showImportHistory = ! $this->showImportHistory;
         if ($this->showImportHistory) {
             $this->loadImportLogs();
         }
@@ -129,7 +140,7 @@ class ImportExportManager extends Component
         } catch (\Exception $e) {
             $this->importResult = [
                 'success' => false,
-                'message' => 'Import failed: ' . $e->getMessage(),
+                'message' => 'Import failed: '.$e->getMessage(),
                 'log' => null,
             ];
         }
@@ -138,19 +149,19 @@ class ImportExportManager extends Component
     public function exportIcs()
     {
         try {
-            $exportService = new IcsExportService();
+            $exportService = new IcsExportService;
 
-            if (!empty($this->selectedCalendarsForExport) && count($this->selectedCalendarsForExport) > 1) {
+            if (! empty($this->selectedCalendarsForExport) && count($this->selectedCalendarsForExport) > 1) {
                 // Export multiple calendars
                 $calendars = Calendar::whereIn('id', $this->selectedCalendarsForExport)->get();
                 $startDate = $this->startDate ? Carbon::parse($this->startDate) : null;
                 $endDate = $this->endDate ? Carbon::parse($this->endDate) : null;
 
                 $content = $exportService->exportMultipleCalendars($calendars->all(), $startDate, $endDate);
-                $filename = 'calendars-combined-' . Carbon::now()->format('Y-m-d') . '.ics';
+                $filename = 'calendars-combined-'.Carbon::now()->format('Y-m-d').'.ics';
             } else {
                 // Export single calendar
-                $calendarId = !empty($this->selectedCalendarsForExport)
+                $calendarId = ! empty($this->selectedCalendarsForExport)
                     ? $this->selectedCalendarsForExport[0]
                     : $this->selectedCalendarForExport;
 
@@ -167,7 +178,8 @@ class ImportExportManager extends Component
             }, $filename, ['Content-Type' => $exportService->getMimeType()]);
 
         } catch (\Exception $e) {
-            session()->flash('error', 'Export failed: ' . $e->getMessage());
+            session()->flash('error', 'Export failed: '.$e->getMessage());
+
             return null;
         }
     }
@@ -175,9 +187,9 @@ class ImportExportManager extends Component
     public function exportCsv()
     {
         try {
-            $exportService = new CsvExportService();
+            $exportService = new CsvExportService;
 
-            if (!empty($this->selectedCalendarsForExport) && count($this->selectedCalendarsForExport) > 1) {
+            if (! empty($this->selectedCalendarsForExport) && count($this->selectedCalendarsForExport) > 1) {
                 // Export multiple calendars
                 $calendars = Calendar::whereIn('id', $this->selectedCalendarsForExport)->get();
                 $startDate = $this->startDate ? Carbon::parse($this->startDate) : null;
@@ -187,7 +199,7 @@ class ImportExportManager extends Component
                 $filename = $exportService->generateCombinedFilename();
             } else {
                 // Export single calendar
-                $calendarId = !empty($this->selectedCalendarsForExport)
+                $calendarId = ! empty($this->selectedCalendarsForExport)
                     ? $this->selectedCalendarsForExport[0]
                     : $this->selectedCalendarForExport;
 
@@ -204,7 +216,8 @@ class ImportExportManager extends Component
             }, $filename, ['Content-Type' => $exportService->getMimeType()]);
 
         } catch (\Exception $e) {
-            session()->flash('error', 'Export failed: ' . $e->getMessage());
+            session()->flash('error', 'Export failed: '.$e->getMessage());
+
             return null;
         }
     }
@@ -212,9 +225,9 @@ class ImportExportManager extends Component
     public function exportPdf()
     {
         try {
-            $exportService = new PdfExportService();
+            $exportService = new PdfExportService;
 
-            if (!empty($this->selectedCalendarsForExport) && count($this->selectedCalendarsForExport) > 1) {
+            if (! empty($this->selectedCalendarsForExport) && count($this->selectedCalendarsForExport) > 1) {
                 // Export multiple calendars
                 $calendars = Calendar::whereIn('id', $this->selectedCalendarsForExport)->get();
                 $startDate = $this->startDate ? Carbon::parse($this->startDate) : null;
@@ -224,7 +237,7 @@ class ImportExportManager extends Component
                 $filename = $exportService->generateCombinedFilename();
             } else {
                 // Export single calendar
-                $calendarId = !empty($this->selectedCalendarsForExport)
+                $calendarId = ! empty($this->selectedCalendarsForExport)
                     ? $this->selectedCalendarsForExport[0]
                     : $this->selectedCalendarForExport;
 
@@ -247,7 +260,8 @@ class ImportExportManager extends Component
             }, $filename, ['Content-Type' => 'application/pdf']);
 
         } catch (\Exception $e) {
-            session()->flash('error', 'Export failed: ' . $e->getMessage());
+            session()->flash('error', 'Export failed: '.$e->getMessage());
+
             return null;
         }
     }

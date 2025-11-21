@@ -10,11 +10,6 @@ class CsvExportService
 {
     /**
      * Export a calendar to CSV format
-     *
-     * @param Calendar $calendar
-     * @param Carbon|null $startDate
-     * @param Carbon|null $endDate
-     * @return string
      */
     public function exportCalendar(
         Calendar $calendar,
@@ -28,11 +23,6 @@ class CsvExportService
 
     /**
      * Export multiple calendars to CSV format
-     *
-     * @param array $calendars
-     * @param Carbon|null $startDate
-     * @param Carbon|null $endDate
-     * @return string
      */
     public function exportMultipleCalendars(
         array $calendars,
@@ -55,9 +45,6 @@ class CsvExportService
     /**
      * Get appointments for export
      *
-     * @param Calendar $calendar
-     * @param Carbon|null $startDate
-     * @param Carbon|null $endDate
      * @return \Illuminate\Database\Eloquent\Collection
      */
     protected function getAppointments(
@@ -81,8 +68,7 @@ class CsvExportService
     /**
      * Generate CSV content from appointments
      *
-     * @param \Illuminate\Support\Collection $appointments
-     * @return string
+     * @param  \Illuminate\Support\Collection  $appointments
      */
     protected function generateCsv($appointments): string
     {
@@ -137,9 +123,6 @@ class CsvExportService
 
     /**
      * Format recurrence rule for CSV display
-     *
-     * @param array $rule
-     * @return string
      */
     protected function formatRecurrenceRule(array $rule): string
     {
@@ -161,7 +144,7 @@ class CsvExportService
             $parts[] = "until {$rule['until']}";
         }
 
-        if (isset($rule['byDay']) && !empty($rule['byDay'])) {
+        if (isset($rule['byDay']) && ! empty($rule['byDay'])) {
             $days = is_array($rule['byDay']) ? implode(',', $rule['byDay']) : $rule['byDay'];
             $parts[] = "on {$days}";
         }
@@ -171,8 +154,6 @@ class CsvExportService
 
     /**
      * Get the MIME type for CSV files
-     *
-     * @return string
      */
     public function getMimeType(): string
     {
@@ -181,9 +162,6 @@ class CsvExportService
 
     /**
      * Generate a filename for calendar export
-     *
-     * @param Calendar $calendar
-     * @return string
      */
     public function generateFilename(Calendar $calendar): string
     {
@@ -195,8 +173,6 @@ class CsvExportService
 
     /**
      * Generate filename for multiple calendars export
-     *
-     * @return string
      */
     public function generateCombinedFilename(): string
     {

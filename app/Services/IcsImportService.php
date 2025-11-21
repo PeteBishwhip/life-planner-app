@@ -14,9 +14,13 @@ use Kigkonsult\Icalcreator\Vcalendar;
 class IcsImportService
 {
     protected User $user;
+
     protected Calendar $targetCalendar;
+
     protected array $errors = [];
+
     protected int $successCount = 0;
+
     protected int $failCount = 0;
 
     public function __construct(User $user, Calendar $targetCalendar)
@@ -28,9 +32,8 @@ class IcsImportService
     /**
      * Import appointments from an ICS file
      *
-     * @param string $filePath Path to the ICS file
-     * @param string $filename Original filename
-     * @return ImportLog
+     * @param  string  $filePath  Path to the ICS file
+     * @param  string  $filename  Original filename
      */
     public function import(string $filePath, string $filename): ImportLog
     {
@@ -92,7 +95,7 @@ class IcsImportService
                 'records_imported' => $this->successCount,
                 'records_failed' => $this->failCount,
                 'error_log' => array_merge($this->errors, [
-                    ['error' => 'Critical error: ' . $e->getMessage()]
+                    ['error' => 'Critical error: '.$e->getMessage()],
                 ]),
             ]);
 
@@ -108,8 +111,7 @@ class IcsImportService
     /**
      * Process a single VEVENT component
      *
-     * @param \Kigkonsult\Icalcreator\Vevent $vevent
-     * @return void
+     * @param  \Kigkonsult\Icalcreator\Vevent  $vevent
      */
     protected function processEvent($vevent): void
     {
@@ -121,7 +123,7 @@ class IcsImportService
         $dtstart = $vevent->getDtstart();
         $dtend = $vevent->getDtend();
 
-        if (!$dtstart) {
+        if (! $dtstart) {
             throw new \Exception('Event must have a start date');
         }
 
@@ -154,8 +156,7 @@ class IcsImportService
     /**
      * Convert ICS datetime to Carbon instance
      *
-     * @param mixed $dt
-     * @return Carbon
+     * @param  mixed  $dt
      */
     protected function convertToCarbon($dt): Carbon
     {
@@ -173,8 +174,7 @@ class IcsImportService
     /**
      * Check if event is all-day
      *
-     * @param \Kigkonsult\Icalcreator\Vevent $vevent
-     * @return bool
+     * @param  \Kigkonsult\Icalcreator\Vevent  $vevent
      */
     protected function isAllDayEvent($vevent): bool
     {
@@ -182,6 +182,7 @@ class IcsImportService
 
         if (is_array($dtstart)) {
             $params = $dtstart[0] ?? [];
+
             return isset($params['VALUE']) && $params['VALUE'] === 'DATE';
         }
 
@@ -191,8 +192,7 @@ class IcsImportService
     /**
      * Parse recurrence rule from ICS format to our format
      *
-     * @param mixed $rrule
-     * @return array|null
+     * @param  mixed  $rrule
      */
     protected function parseRecurrenceRule($rrule): ?array
     {
@@ -244,8 +244,6 @@ class IcsImportService
 
     /**
      * Get import statistics
-     *
-     * @return array
      */
     public function getStatistics(): array
     {

@@ -13,11 +13,6 @@ class IcsExportService
 {
     /**
      * Export a calendar to ICS format
-     *
-     * @param Calendar $calendar
-     * @param Carbon|null $startDate
-     * @param Carbon|null $endDate
-     * @return string
      */
     public function exportCalendar(
         Calendar $calendar,
@@ -40,11 +35,6 @@ class IcsExportService
 
     /**
      * Export multiple calendars to ICS format
-     *
-     * @param array $calendars
-     * @param Carbon|null $startDate
-     * @param Carbon|null $endDate
-     * @return string
      */
     public function exportMultipleCalendars(
         array $calendars,
@@ -69,9 +59,6 @@ class IcsExportService
 
     /**
      * Export a single appointment to ICS format
-     *
-     * @param Appointment $appointment
-     * @return string
      */
     public function exportAppointment(Appointment $appointment): string
     {
@@ -87,9 +74,6 @@ class IcsExportService
     /**
      * Get appointments for export
      *
-     * @param Calendar $calendar
-     * @param Carbon|null $startDate
-     * @param Carbon|null $endDate
      * @return \Illuminate\Database\Eloquent\Collection
      */
     protected function getAppointments(
@@ -113,9 +97,6 @@ class IcsExportService
 
     /**
      * Create an iCalendar event from an appointment
-     *
-     * @param Appointment $appointment
-     * @return Event
      */
     protected function createEvent(Appointment $appointment): Event
     {
@@ -151,14 +132,10 @@ class IcsExportService
 
     /**
      * Add recurrence rule to event
-     *
-     * @param Event $event
-     * @param array $recurrenceRule
-     * @return void
      */
     protected function addRecurrence(Event $event, array $recurrenceRule): void
     {
-        if (!isset($recurrenceRule['freq'])) {
+        if (! isset($recurrenceRule['freq'])) {
             return;
         }
 
@@ -171,7 +148,7 @@ class IcsExportService
             default => null,
         };
 
-        if (!$frequency) {
+        if (! $frequency) {
             return;
         }
 
@@ -196,8 +173,6 @@ class IcsExportService
 
     /**
      * Get the MIME type for ICS files
-     *
-     * @return string
      */
     public function getMimeType(): string
     {
@@ -206,9 +181,6 @@ class IcsExportService
 
     /**
      * Generate a filename for calendar export
-     *
-     * @param Calendar $calendar
-     * @return string
      */
     public function generateFilename(Calendar $calendar): string
     {
