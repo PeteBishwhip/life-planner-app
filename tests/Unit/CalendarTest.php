@@ -6,6 +6,7 @@ use App\Models\Appointment;
 use App\Models\Calendar;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class CalendarTest extends TestCase
@@ -20,7 +21,7 @@ class CalendarTest extends TestCase
         $this->user = User::factory()->create();
     }
 
-    /** @test */
+    #[Test]
     public function it_can_create_a_calendar(): void
     {
         $calendar = Calendar::factory()->for($this->user)->create([
@@ -35,7 +36,7 @@ class CalendarTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_belongs_to_a_user(): void
     {
         $calendar = Calendar::factory()->for($this->user)->create();
@@ -44,7 +45,7 @@ class CalendarTest extends TestCase
         $this->assertEquals($this->user->id, $calendar->user_id);
     }
 
-    /** @test */
+    #[Test]
     public function it_has_many_appointments(): void
     {
         $calendar = Calendar::factory()->for($this->user)->create();
@@ -59,7 +60,7 @@ class CalendarTest extends TestCase
         $this->assertInstanceOf(Appointment::class, $calendar->appointments->first());
     }
 
-    /** @test */
+    #[Test]
     public function it_casts_boolean_attributes_correctly(): void
     {
         $calendar = Calendar::factory()->for($this->user)->create([
@@ -73,7 +74,7 @@ class CalendarTest extends TestCase
         $this->assertIsBool($calendar->is_default);
     }
 
-    /** @test */
+    #[Test]
     public function it_sets_default_color_based_on_type_if_not_provided(): void
     {
         $personalCalendar = Calendar::factory()->for($this->user)->create([
@@ -96,7 +97,7 @@ class CalendarTest extends TestCase
         $this->assertEquals('#8B5CF6', $customCalendar->color);
     }
 
-    /** @test */
+    #[Test]
     public function it_ensures_only_one_default_calendar_per_user(): void
     {
         $calendar1 = Calendar::factory()->for($this->user)->create(['is_default' => true]);
@@ -112,7 +113,7 @@ class CalendarTest extends TestCase
         $this->assertTrue($calendar2->is_default);
     }
 
-    /** @test */
+    #[Test]
     public function scope_visible_filters_visible_calendars(): void
     {
         Calendar::factory()->for($this->user)->create(['is_visible' => true]);
@@ -124,7 +125,7 @@ class CalendarTest extends TestCase
         $this->assertCount(2, $visibleCalendars);
     }
 
-    /** @test */
+    #[Test]
     public function scope_for_user_filters_by_user_id(): void
     {
         $anotherUser = User::factory()->create();
@@ -138,7 +139,7 @@ class CalendarTest extends TestCase
         $this->assertTrue($userCalendars->every(fn ($cal) => $cal->user_id === $this->user->id));
     }
 
-    /** @test */
+    #[Test]
     public function scope_of_type_filters_by_calendar_type(): void
     {
         Calendar::factory()->for($this->user)->create(['type' => 'personal']);
@@ -151,7 +152,7 @@ class CalendarTest extends TestCase
         $this->assertTrue($personalCalendars->every(fn ($cal) => $cal->type === 'personal'));
     }
 
-    /** @test */
+    #[Test]
     public function scope_default_filters_default_calendars(): void
     {
         Calendar::factory()->for($this->user)->create(['is_default' => true]);
@@ -164,7 +165,7 @@ class CalendarTest extends TestCase
         $this->assertTrue($defaultCalendars->first()->is_default);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_combine_multiple_scopes(): void
     {
         Calendar::factory()->for($this->user)->create([
@@ -190,7 +191,7 @@ class CalendarTest extends TestCase
         $this->assertCount(1, $results);
     }
 
-    /** @test */
+    #[Test]
     public function validation_rules_require_name(): void
     {
         $rules = Calendar::rules();
@@ -199,7 +200,7 @@ class CalendarTest extends TestCase
         $this->assertContains('required', $rules['name']);
     }
 
-    /** @test */
+    #[Test]
     public function validation_rules_require_valid_type(): void
     {
         $rules = Calendar::rules();
@@ -214,7 +215,7 @@ class CalendarTest extends TestCase
         $this->assertStringContainsString('custom', $typeRule);
     }
 
-    /** @test */
+    #[Test]
     public function validation_rules_require_valid_color_format(): void
     {
         $rules = Calendar::rules();

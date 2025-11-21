@@ -7,6 +7,7 @@ use App\Models\AppointmentReminder;
 use App\Models\Calendar;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class AppointmentTest extends TestCase
@@ -24,7 +25,7 @@ class AppointmentTest extends TestCase
         $this->calendar = Calendar::factory()->for($this->user)->create();
     }
 
-    /** @test */
+    #[Test]
     public function it_can_create_an_appointment(): void
     {
         $appointment = Appointment::factory()
@@ -41,7 +42,7 @@ class AppointmentTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_belongs_to_a_calendar(): void
     {
         $appointment = Appointment::factory()
@@ -53,7 +54,7 @@ class AppointmentTest extends TestCase
         $this->assertEquals($this->calendar->id, $appointment->calendar_id);
     }
 
-    /** @test */
+    #[Test]
     public function it_belongs_to_a_user(): void
     {
         $appointment = Appointment::factory()
@@ -65,7 +66,7 @@ class AppointmentTest extends TestCase
         $this->assertEquals($this->user->id, $appointment->user_id);
     }
 
-    /** @test */
+    #[Test]
     public function it_has_many_reminders(): void
     {
         $appointment = Appointment::factory()
@@ -82,7 +83,7 @@ class AppointmentTest extends TestCase
         $this->assertInstanceOf(AppointmentReminder::class, $appointment->reminders->first());
     }
 
-    /** @test */
+    #[Test]
     public function it_casts_dates_correctly(): void
     {
         $appointment = Appointment::factory()
@@ -94,7 +95,7 @@ class AppointmentTest extends TestCase
         $this->assertInstanceOf(\Illuminate\Support\Carbon::class, $appointment->end_datetime);
     }
 
-    /** @test */
+    #[Test]
     public function it_casts_recurrence_rule_as_array(): void
     {
         $recurrenceRule = [
@@ -112,7 +113,7 @@ class AppointmentTest extends TestCase
         $this->assertEquals('weekly', $appointment->recurrence_rule['freq']);
     }
 
-    /** @test */
+    #[Test]
     public function it_sets_default_status_to_scheduled(): void
     {
         $appointment = Appointment::factory()
@@ -123,7 +124,7 @@ class AppointmentTest extends TestCase
         $this->assertEquals('scheduled', $appointment->status);
     }
 
-    /** @test */
+    #[Test]
     public function it_inherits_color_from_calendar_if_not_provided(): void
     {
         $this->calendar->update(['color' => '#FF5733']);
@@ -136,7 +137,7 @@ class AppointmentTest extends TestCase
         $this->assertEquals('#FF5733', $appointment->color);
     }
 
-    /** @test */
+    #[Test]
     public function scope_for_user_filters_by_user_id(): void
     {
         $anotherUser = User::factory()->create();
@@ -150,7 +151,7 @@ class AppointmentTest extends TestCase
         $this->assertCount(2, $userAppointments);
     }
 
-    /** @test */
+    #[Test]
     public function scope_for_calendar_filters_by_calendar_id(): void
     {
         $anotherCalendar = Calendar::factory()->for($this->user)->create();
@@ -163,7 +164,7 @@ class AppointmentTest extends TestCase
         $this->assertCount(3, $calendarAppointments);
     }
 
-    /** @test */
+    #[Test]
     public function scope_between_dates_finds_appointments_in_range(): void
     {
         $now = now();
@@ -188,7 +189,7 @@ class AppointmentTest extends TestCase
         $this->assertCount(1, $appointments);
     }
 
-    /** @test */
+    #[Test]
     public function scope_upcoming_finds_future_scheduled_appointments(): void
     {
         Appointment::factory()->for($this->calendar)->for($this->user)->upcoming()->create();
@@ -200,7 +201,7 @@ class AppointmentTest extends TestCase
         $this->assertCount(1, $upcomingAppointments);
     }
 
-    /** @test */
+    #[Test]
     public function scope_scheduled_filters_scheduled_appointments(): void
     {
         Appointment::factory()->for($this->calendar)->for($this->user)->scheduled()->create();
@@ -212,7 +213,7 @@ class AppointmentTest extends TestCase
         $this->assertCount(1, $scheduledAppointments);
     }
 
-    /** @test */
+    #[Test]
     public function scope_completed_filters_completed_appointments(): void
     {
         Appointment::factory()->for($this->calendar)->for($this->user)->scheduled()->create();
@@ -224,7 +225,7 @@ class AppointmentTest extends TestCase
         $this->assertCount(2, $completedAppointments);
     }
 
-    /** @test */
+    #[Test]
     public function scope_cancelled_filters_cancelled_appointments(): void
     {
         Appointment::factory()->for($this->calendar)->for($this->user)->scheduled()->create();
@@ -235,7 +236,7 @@ class AppointmentTest extends TestCase
         $this->assertCount(1, $cancelledAppointments);
     }
 
-    /** @test */
+    #[Test]
     public function scope_all_day_filters_all_day_appointments(): void
     {
         Appointment::factory()->for($this->calendar)->for($this->user)->allDay()->create();
@@ -246,7 +247,7 @@ class AppointmentTest extends TestCase
         $this->assertCount(1, $allDayAppointments);
     }
 
-    /** @test */
+    #[Test]
     public function is_recurring_returns_true_when_recurrence_rule_exists(): void
     {
         $recurringAppointment = Appointment::factory()
@@ -264,7 +265,7 @@ class AppointmentTest extends TestCase
         $this->assertFalse($normalAppointment->isRecurring());
     }
 
-    /** @test */
+    #[Test]
     public function has_conflict_detects_overlapping_appointments(): void
     {
         $existingAppointment = Appointment::factory()
@@ -295,7 +296,7 @@ class AppointmentTest extends TestCase
         $this->assertFalse($noConflict);
     }
 
-    /** @test */
+    #[Test]
     public function get_duration_in_minutes_returns_correct_duration(): void
     {
         $appointment = Appointment::factory()
@@ -309,7 +310,7 @@ class AppointmentTest extends TestCase
         $this->assertEquals(90, $appointment->getDurationInMinutes());
     }
 
-    /** @test */
+    #[Test]
     public function it_can_have_recurrence_parent_and_instances(): void
     {
         $parent = Appointment::factory()
