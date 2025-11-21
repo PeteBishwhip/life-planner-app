@@ -51,11 +51,13 @@ class IcsImportService
                 Vcalendar::UNIQUE_ID => 'life-planner-app',
             ]);
 
-            // Parse the ICS file
-            $calendar->parse($filePath);
+            // Parse the ICS file - read content and split into lines
+            $content = file_get_contents($filePath);
+            $lines = explode(PHP_EOL, $content);
+            $calendar->parse($lines);
 
             // Process each event in the calendar
-            foreach ($calendar->getComponents(Vcalendar::VEVENT) as $vevent) {
+            while ($vevent = $calendar->getComponent(Vcalendar::VEVENT)) {
                 try {
                     $this->processEvent($vevent);
                     $this->successCount++;
