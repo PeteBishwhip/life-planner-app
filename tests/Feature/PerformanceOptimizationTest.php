@@ -26,6 +26,7 @@ class PerformanceOptimizationTest extends TestCase
         $this->calendar = Calendar::factory()->create([
             'user_id' => $this->user->id,
             'is_default' => true,
+            'is_visible' => true,
         ]);
     }
 
