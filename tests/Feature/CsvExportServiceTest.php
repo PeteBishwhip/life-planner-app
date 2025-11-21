@@ -92,6 +92,8 @@ class CsvExportServiceTest extends TestCase
             'user_id' => $this->user->id,
         ]);
 
+        // Explicitly refresh the calendar to ensure we get a clean count
+        $this->calendar->refresh();
         $this->assertEquals(3, $this->calendar->appointments()->count(), 'Should have exactly 3 appointments');
 
         $csvContent = $this->service->exportCalendar($this->calendar);
