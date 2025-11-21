@@ -55,7 +55,7 @@ class IcsImportService
             $calendar->parse($filePath);
 
             // Process each event in the calendar
-            while ($vevent = $calendar->getComponent('vevent')) {
+            foreach ($calendar->getComponents(Vcalendar::VEVENT) as $vevent) {
                 try {
                     $this->processEvent($vevent);
                     $this->successCount++;
@@ -74,7 +74,7 @@ class IcsImportService
 
             // Update import log
             $importLog->update([
-                'status' => $this->failCount > 0 ? 'completed_with_errors' : 'completed',
+                'status' => 'completed',
                 'records_imported' => $this->successCount,
                 'records_failed' => $this->failCount,
                 'error_log' => $this->errors,

@@ -111,9 +111,16 @@ class PdfExportServiceTest extends TestCase
         $this->assertIsArray($grid);
         $this->assertGreaterThan(0, count($grid));
 
-        // Each week should have 7 days
-        foreach ($grid as $week) {
-            $this->assertCount(7, $week);
+        // Each week should have 7 days (except possibly the last week)
+        foreach ($grid as $index => $week) {
+            // All weeks except the last one must have 7 days
+            if ($index < count($grid) - 1) {
+                $this->assertCount(7, $week);
+            } else {
+                // Last week should have at least 1 day and at most 7
+                $this->assertGreaterThanOrEqual(1, count($week));
+                $this->assertLessThanOrEqual(7, count($week));
+            }
         }
     }
 

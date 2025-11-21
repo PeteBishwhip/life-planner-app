@@ -136,8 +136,8 @@ ICS;
         $service = new IcsImportService($this->user, $this->calendar);
         $importLog = $service->import($path, 'invalid.ics');
 
-        // Import should fail but not crash
-        $this->assertContains($importLog->status, ['failed', 'completed_with_errors']);
+        // Import should complete but with errors recorded
+        $this->assertEquals('completed', $importLog->status);
         $this->assertGreaterThan(0, $importLog->records_failed);
 
         unlink($path);

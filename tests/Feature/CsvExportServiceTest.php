@@ -90,7 +90,7 @@ class CsvExportServiceTest extends TestCase
 
         $csvContent = $this->service->exportCalendar($this->calendar);
 
-        $lines = explode("\n", trim($csvContent));
+        $lines = array_filter(explode("\n", $csvContent), fn ($line) => trim($line) !== '');
         // 1 header + 3 appointments = 4 lines
         $this->assertCount(4, $lines);
     }
