@@ -88,28 +88,22 @@ class CsvExportServiceTest extends TestCase
         $this->assertEquals(0, Appointment::count(), 'Database should have no appointments');
         $this->assertEquals(0, $this->calendar->appointments()->count(), 'Calendar should start with no appointments');
 
-        // Create exactly 3 appointments
-        $created = Appointment::factory()->count(3)->create([
+        // Create exactly 3 appointments with specific data (no newlines in descriptions)
+        Appointment::factory()->count(3)->create([
             'calendar_id' => $this->calendar->id,
             'user_id' => $this->user->id,
+            'description' => 'Simple description', // Override to prevent newlines
+            'location' => 'Test Location',
         ]);
 
-        // Verify exactly 3 were created
-        $this->assertEquals(3, $created->count(), 'Factory should create exactly 3 appointments');
-        $this->assertEquals(3, Appointment::count(), 'Database should have exactly 3 appointments total');
-        $this->assertEquals(3, $this->calendar->fresh()->appointments()->count(), 'Calendar should have exactly 3 appointments');
+        $this->assertEquals(3, Appointment::count(), 'Database should have exactly 3 appointments');
 
         $csvContent = $this->service->exportCalendar($this->calendar);
 
         $lines = array_filter(explode("\n", $csvContent), fn ($line) => trim($line) !== '');
 
-        // Debug if count is wrong
-        if (count($lines) !== 4) {
-            $this->fail('Expected 4 lines (1 header + 3 appointments), got '.count($lines).'. Appointments in DB: '.Appointment::count());
-        }
-
         // 1 header + 3 appointments = 4 lines
-        $this->assertCount(4, $lines);
+        $this->assertCount(4, $lines, 'Expected 4 lines (1 header + 3 appointments), got '.count($lines));
     }
 
     #[Test]

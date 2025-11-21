@@ -113,7 +113,8 @@ END:VEVENT
 END:VCALENDAR
 ICS;
 
-        // Use UploadedFile::fake() without Storage::fake() so file I/O works
+        // Fake the default storage disk so files are stored in a testable location
+        Storage::fake();
         $file = UploadedFile::fake()->createWithContent('test.ics', $icsContent);
 
         Livewire::test(ImportExportManager::class)
@@ -202,7 +203,8 @@ ICS;
         // Create an invalid ICS file
         $icsContent = 'INVALID ICS CONTENT';
 
-        // Use UploadedFile::fake() without Storage::fake() so file I/O works
+        // Fake the default storage disk so files are stored in a testable location
+        Storage::fake();
         $file = UploadedFile::fake()->createWithContent('invalid.ics', $icsContent);
 
         Livewire::test(ImportExportManager::class)
@@ -231,7 +233,8 @@ END:VEVENT
 END:VCALENDAR
 ICS;
 
-        // Use UploadedFile::fake() without Storage::fake() so file I/O works
+        // Fake the default storage disk so files are stored in a testable location
+        Storage::fake();
         $file = UploadedFile::fake()->createWithContent('test.ics', $icsContent);
 
         Livewire::test(ImportExportManager::class)
