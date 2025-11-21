@@ -40,7 +40,7 @@ class PerformanceOptimizationTest extends TestCase
         $response->assertStatus(200);
 
         // Check that cache was set
-        $cacheKey = 'user_calendars_' . $this->user->id;
+        $cacheKey = 'user_calendars_'.$this->user->id;
         $this->assertTrue(Cache::has($cacheKey));
     }
 
@@ -176,7 +176,7 @@ class PerformanceOptimizationTest extends TestCase
 
         $this->assertNotNull($indexMigrationFile);
 
-        $content = file_get_contents($migrationPath . '/' . $indexMigrationFile);
+        $content = file_get_contents($migrationPath.'/'.$indexMigrationFile);
 
         // Check for important indexes
         $this->assertStringContainsString('appointments_date_range_index', $content);
@@ -197,7 +197,7 @@ class PerformanceOptimizationTest extends TestCase
 
         $this->assertNotNull($indexMigrationFile);
 
-        $content = file_get_contents($migrationPath . '/' . $indexMigrationFile);
+        $content = file_get_contents($migrationPath.'/'.$indexMigrationFile);
 
         // Check for calendar indexes
         $this->assertStringContainsString('calendars_user_visible_index', $content);

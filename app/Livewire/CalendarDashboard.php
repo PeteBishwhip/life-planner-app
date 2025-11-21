@@ -34,7 +34,7 @@ class CalendarDashboard extends Component
     {
         // Cache calendars for 1 hour to reduce queries
         $calendars = cache()->remember(
-            'user_calendars_' . auth()->id(),
+            'user_calendars_'.auth()->id(),
             3600,
             fn () => auth()->user()->calendars()->get()
         );
