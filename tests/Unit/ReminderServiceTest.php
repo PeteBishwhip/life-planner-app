@@ -25,6 +25,9 @@ class ReminderServiceTest extends TestCase
     {
         parent::setUp();
 
+        // Freeze time for predictable testing
+        Carbon::setTestNow('2025-01-15 10:00:00');
+
         $this->service = new ReminderService();
         $this->user = User::factory()->create();
         $this->calendar = Calendar::factory()->create(['user_id' => $this->user->id]);
@@ -34,6 +37,14 @@ class ReminderServiceTest extends TestCase
             'start_datetime' => now()->addHours(2),
             'end_datetime' => now()->addHours(3),
         ]);
+    }
+
+    protected function tearDown(): void
+    {
+        // Unfreeze time after each test
+        Carbon::setTestNow();
+
+        parent::tearDown();
     }
 
     public function test_creates_reminders_for_appointment(): void
