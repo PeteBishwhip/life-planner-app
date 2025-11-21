@@ -7,7 +7,6 @@ use App\Models\Calendar;
 use App\Models\ImportLog;
 use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Kigkonsult\Icalcreator\Vcalendar;
 
