@@ -14,6 +14,7 @@ class AppointmentReminderNotification extends Notification implements ShouldQueu
     use Queueable;
 
     public Appointment $appointment;
+
     public AppointmentReminder $reminder;
 
     /**
@@ -51,17 +52,17 @@ class AppointmentReminderNotification extends Notification implements ShouldQueu
         $timeUntil = $this->formatTimeUntil($this->reminder->reminder_minutes_before);
 
         return (new MailMessage)
-            ->subject('Reminder: ' . $this->appointment->title)
-            ->greeting('Hello ' . $notifiable->name . '!')
+            ->subject('Reminder: '.$this->appointment->title)
+            ->greeting('Hello '.$notifiable->name.'!')
             ->line('This is a reminder for your upcoming appointment.')
-            ->line('**' . $this->appointment->title . '**')
-            ->line('**When:** ' . $this->appointment->start_datetime->format('l, F j, Y \a\t g:i A'))
-            ->line('**Time until appointment:** ' . $timeUntil)
+            ->line('**'.$this->appointment->title.'**')
+            ->line('**When:** '.$this->appointment->start_datetime->format('l, F j, Y \a\t g:i A'))
+            ->line('**Time until appointment:** '.$timeUntil)
             ->when($this->appointment->location, function ($mail) {
-                return $mail->line('**Location:** ' . $this->appointment->location);
+                return $mail->line('**Location:** '.$this->appointment->location);
             })
             ->when($this->appointment->description, function ($mail) {
-                return $mail->line('**Details:** ' . $this->appointment->description);
+                return $mail->line('**Details:** '.$this->appointment->description);
             })
             ->action('View Appointment', url('/dashboard'))
             ->line('Thank you for using Life Planner!');
@@ -87,15 +88,17 @@ class AppointmentReminderNotification extends Notification implements ShouldQueu
     protected function formatTimeUntil(int $minutes): string
     {
         if ($minutes < 60) {
-            return $minutes . ' minutes';
+            return $minutes.' minutes';
         }
 
         if ($minutes < 1440) {
             $hours = round($minutes / 60, 1);
-            return $hours == 1 ? '1 hour' : $hours . ' hours';
+
+            return $hours == 1 ? '1 hour' : $hours.' hours';
         }
 
         $days = round($minutes / 1440, 1);
-        return $days == 1 ? '1 day' : $days . ' days';
+
+        return $days == 1 ? '1 day' : $days.' days';
     }
 }

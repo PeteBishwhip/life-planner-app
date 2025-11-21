@@ -15,15 +15,18 @@ class ConflictDetectionServiceTest extends TestCase
     use RefreshDatabase;
 
     protected ConflictDetectionService $service;
+
     protected User $user;
+
     protected Calendar $personalCalendar;
+
     protected Calendar $businessCalendar;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->service = new ConflictDetectionService();
+        $this->service = new ConflictDetectionService;
         $this->user = User::factory()->create();
         $this->personalCalendar = Calendar::factory()->create([
             'user_id' => $this->user->id,
@@ -274,7 +277,7 @@ class ConflictDetectionServiceTest extends TestCase
             $slotStart = $slot['start'];
             $slotEnd = $slot['end'];
 
-            $conflictCheck = !($slotStart->gte(Carbon::parse('2025-01-01 10:00:00')) &&
+            $conflictCheck = ! ($slotStart->gte(Carbon::parse('2025-01-01 10:00:00')) &&
                               $slotStart->lt(Carbon::parse('2025-01-01 11:00:00')));
 
             $this->assertTrue($conflictCheck, 'Available slot should not conflict with existing appointment');

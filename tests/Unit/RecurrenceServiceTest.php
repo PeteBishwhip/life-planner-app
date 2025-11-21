@@ -15,14 +15,16 @@ class RecurrenceServiceTest extends TestCase
     use RefreshDatabase;
 
     protected RecurrenceService $service;
+
     protected User $user;
+
     protected Calendar $calendar;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->service = new RecurrenceService();
+        $this->service = new RecurrenceService;
         $this->user = User::factory()->create();
         $this->calendar = Calendar::factory()->create(['user_id' => $this->user->id]);
     }

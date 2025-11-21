@@ -116,7 +116,7 @@ class AppointmentManager extends Component
         $validated['user_id'] = auth()->id();
 
         // Check for conflicts if not allowing override
-        if (!$this->allow_override) {
+        if (! $this->allow_override) {
             $startDate = Carbon::parse($this->start_datetime);
             $endDate = Carbon::parse($this->end_datetime);
 
@@ -128,7 +128,7 @@ class AppointmentManager extends Component
                 $this->appointmentId
             );
 
-            if (!$result['can_schedule']) {
+            if (! $result['can_schedule']) {
                 $this->conflicts = $result['conflicts']->toArray();
                 $this->show_conflicts = true;
                 session()->flash('warning', $result['message']);
@@ -144,7 +144,7 @@ class AppointmentManager extends Component
                 $this->recurrence_interval,
                 $this->recurrence_end_date,
                 $this->recurrence_count,
-                !empty($this->recurrence_days) ? $this->recurrence_days : null
+                ! empty($this->recurrence_days) ? $this->recurrence_days : null
             );
         } else {
             $validated['recurrence_rule'] = null;
@@ -170,7 +170,7 @@ class AppointmentManager extends Component
             $appointment->update($validated);
 
             // Update reminders
-            if (!empty($this->reminder_minutes)) {
+            if (! empty($this->reminder_minutes)) {
                 $reminderService->updateReminders($appointment, $this->reminder_minutes);
             }
 
@@ -179,7 +179,7 @@ class AppointmentManager extends Component
             $appointment = Appointment::create($validated);
 
             // Create reminders
-            if (!empty($this->reminder_minutes)) {
+            if (! empty($this->reminder_minutes)) {
                 $reminderService->createReminders($appointment, $this->reminder_minutes);
             }
 
@@ -341,12 +341,12 @@ class AppointmentManager extends Component
      */
     public function updatedIsAllDay(): void
     {
-        if ($this->is_all_day && !empty($this->start_datetime)) {
+        if ($this->is_all_day && ! empty($this->start_datetime)) {
             // When enabling all-day, set times to start/end of day
             $start = Carbon::parse($this->start_datetime)->startOfDay();
             $this->start_datetime = $start->format('Y-m-d');
 
-            if (!empty($this->end_datetime)) {
+            if (! empty($this->end_datetime)) {
                 $end = Carbon::parse($this->end_datetime)->endOfDay();
                 $this->end_datetime = $end->format('Y-m-d');
             } else {

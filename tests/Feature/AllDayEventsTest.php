@@ -14,6 +14,7 @@ class AllDayEventsTest extends TestCase
     use RefreshDatabase;
 
     protected User $user;
+
     protected Calendar $calendar;
 
     protected function setUp(): void

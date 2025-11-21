@@ -88,7 +88,7 @@ class ReminderService
 
             return true;
         } catch (\Exception $e) {
-            \Log::error('Failed to send reminder: ' . $e->getMessage(), [
+            \Log::error('Failed to send reminder: '.$e->getMessage(), [
                 'reminder_id' => $reminder->id,
                 'appointment_id' => $reminder->appointment_id,
             ]);
@@ -149,11 +149,13 @@ class ReminderService
 
         if ($minutes < 1440) {
             $hours = $minutes / 60;
-            return $hours == 1 ? "1 hour before" : "{$hours} hours before";
+
+            return $hours == 1 ? '1 hour before' : "{$hours} hours before";
         }
 
         $days = $minutes / 1440;
-        return $days == 1 ? "1 day before" : "{$days} days before";
+
+        return $days == 1 ? '1 day before' : "{$days} days before";
     }
 
     /**
@@ -211,7 +213,7 @@ class ReminderService
     {
         $reminderTime = $this->calculateReminderTime($reminder->appointment, $reminder->reminder_minutes_before);
 
-        return $reminderTime->isPast() && !$reminder->is_sent;
+        return $reminderTime->isPast() && ! $reminder->is_sent;
     }
 
     /**

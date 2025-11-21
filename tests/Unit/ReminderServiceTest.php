@@ -17,8 +17,11 @@ class ReminderServiceTest extends TestCase
     use RefreshDatabase;
 
     protected ReminderService $service;
+
     protected User $user;
+
     protected Calendar $calendar;
+
     protected Appointment $appointment;
 
     protected function setUp(): void
@@ -28,7 +31,7 @@ class ReminderServiceTest extends TestCase
         // Freeze time for predictable testing
         Carbon::setTestNow('2025-01-15 10:00:00');
 
-        $this->service = new ReminderService();
+        $this->service = new ReminderService;
         $this->user = User::factory()->create();
         $this->calendar = Calendar::factory()->create(['user_id' => $this->user->id]);
         $this->appointment = Appointment::factory()->create([

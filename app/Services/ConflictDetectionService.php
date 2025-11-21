@@ -43,15 +43,15 @@ class ConflictDetectionService
                     // Appointment starts within the range
                     $q->whereBetween('start_datetime', [$start, $end]);
                 })
-                ->orWhere(function ($q) use ($start, $end) {
-                    // Appointment ends within the range
-                    $q->whereBetween('end_datetime', [$start, $end]);
-                })
-                ->orWhere(function ($q) use ($start, $end) {
-                    // Appointment spans the entire range
-                    $q->where('start_datetime', '<=', $start)
-                      ->where('end_datetime', '>=', $end);
-                });
+                    ->orWhere(function ($q) use ($start, $end) {
+                        // Appointment ends within the range
+                        $q->whereBetween('end_datetime', [$start, $end]);
+                    })
+                    ->orWhere(function ($q) use ($start, $end) {
+                        // Appointment spans the entire range
+                        $q->where('start_datetime', '<=', $start)
+                            ->where('end_datetime', '>=', $end);
+                    });
             });
 
         if ($excludeAppointmentId) {
@@ -73,7 +73,7 @@ class ConflictDetectionService
     {
         $calendar = Calendar::find($calendarId);
 
-        if (!$calendar) {
+        if (! $calendar) {
             return collect([]);
         }
 
@@ -182,6 +182,7 @@ class ConflictDetectionService
             // Check if this slot is within working hours
             if ($slotEnd->hour < $workingHours['start'] || $current->hour >= $workingHours['end']) {
                 $current->addMinutes(30); // Move to next 30-min slot
+
                 continue;
             }
 
@@ -195,7 +196,7 @@ class ConflictDetectionService
                 );
             });
 
-            if (!$hasConflict) {
+            if (! $hasConflict) {
                 $availableSlots->push([
                     'start' => $current->copy(),
                     'end' => $slotEnd->copy(),

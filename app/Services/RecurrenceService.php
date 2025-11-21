@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Models\Appointment;
 use Carbon\Carbon;
-use Carbon\CarbonPeriod;
 
 class RecurrenceService
 {
@@ -13,7 +12,7 @@ class RecurrenceService
      */
     public function generateInstances(Appointment $appointment, Carbon $startDate, Carbon $endDate): array
     {
-        if (!$appointment->isRecurring()) {
+        if (! $appointment->isRecurring()) {
             return [$appointment];
         }
 
@@ -41,7 +40,7 @@ class RecurrenceService
                 $instanceEnd = $current->copy()->addMinutes($duration);
 
                 $instances[] = [
-                    'id' => $appointment->id . '_' . $instanceStart->format('YmdHis'),
+                    'id' => $appointment->id.'_'.$instanceStart->format('YmdHis'),
                     'appointment_id' => $appointment->id,
                     'title' => $appointment->title,
                     'description' => $appointment->description,
@@ -130,7 +129,7 @@ class RecurrenceService
             // Convert day names to codes
             $dayCodeMap = [
                 'MO' => 'MO', 'TU' => 'TU', 'WE' => 'WE', 'TH' => 'TH',
-                'FR' => 'FR', 'SA' => 'SA', 'SU' => 'SU'
+                'FR' => 'FR', 'SA' => 'SA', 'SU' => 'SU',
             ];
 
             foreach ($dayCodeMap as $code => $value) {
@@ -234,7 +233,7 @@ class RecurrenceService
         $text = 'Repeats ';
 
         if ($interval === 1) {
-            $text .= match($frequency) {
+            $text .= match ($frequency) {
                 'daily' => 'daily',
                 'weekly' => 'weekly',
                 'monthly' => 'monthly',
@@ -242,7 +241,7 @@ class RecurrenceService
                 default => 'daily',
             };
         } else {
-            $text .= match($frequency) {
+            $text .= match ($frequency) {
                 'daily' => "every {$interval} days",
                 'weekly' => "every {$interval} weeks",
                 'monthly' => "every {$interval} months",
@@ -254,7 +253,7 @@ class RecurrenceService
         // Add day of week for weekly recurrence
         if ($frequency === 'weekly' && isset($rule['by_day'])) {
             $days = array_map(function ($day) {
-                return match($day) {
+                return match ($day) {
                     'MO' => 'Monday',
                     'TU' => 'Tuesday',
                     'WE' => 'Wednesday',
@@ -266,15 +265,15 @@ class RecurrenceService
                 };
             }, $rule['by_day']);
 
-            $text .= ' on ' . implode(', ', $days);
+            $text .= ' on '.implode(', ', $days);
         }
 
         // Add end condition
         if (isset($rule['until'])) {
             $until = Carbon::parse($rule['until']);
-            $text .= ' until ' . $until->format('M d, Y');
+            $text .= ' until '.$until->format('M d, Y');
         } elseif (isset($rule['count'])) {
-            $text .= ' for ' . $rule['count'] . ' occurrences';
+            $text .= ' for '.$rule['count'].' occurrences';
         }
 
         return $text;
@@ -285,20 +284,20 @@ class RecurrenceService
      */
     public function validateRecurrenceRule(array $rule): bool
     {
-        if (!isset($rule['frequency'])) {
+        if (! isset($rule['frequency'])) {
             return false;
         }
 
         $validFrequencies = ['daily', 'weekly', 'monthly', 'yearly'];
-        if (!in_array($rule['frequency'], $validFrequencies)) {
+        if (! in_array($rule['frequency'], $validFrequencies)) {
             return false;
         }
 
-        if (isset($rule['interval']) && (!is_int($rule['interval']) || $rule['interval'] < 1)) {
+        if (isset($rule['interval']) && (! is_int($rule['interval']) || $rule['interval'] < 1)) {
             return false;
         }
 
-        if (isset($rule['count']) && (!is_int($rule['count']) || $rule['count'] < 1)) {
+        if (isset($rule['count']) && (! is_int($rule['count']) || $rule['count'] < 1)) {
             return false;
         }
 
