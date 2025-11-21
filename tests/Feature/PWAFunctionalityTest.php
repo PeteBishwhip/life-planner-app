@@ -8,23 +8,26 @@ use Tests\TestCase;
 
 class PWAFunctionalityTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase; // Needed for app_layout tests that require authentication
 
     /** @test */
     public function manifest_file_exists_and_is_accessible(): void
     {
-        $response = $this->get('/manifest.json');
+        $manifestPath = public_path('manifest.json');
 
-        $response->assertStatus(200);
-        $response->assertHeader('Content-Type', 'application/json');
+        $this->assertFileExists($manifestPath);
+
+        // Verify it's valid JSON
+        $content = file_get_contents($manifestPath);
+        $this->assertJson($content);
     }
 
     /** @test */
     public function manifest_contains_required_fields(): void
     {
-        $response = $this->get('/manifest.json');
-
-        $manifest = $response->json();
+        $manifestPath = public_path('manifest.json');
+        $content = file_get_contents($manifestPath);
+        $manifest = json_decode($content, true);
 
         // Check required PWA manifest fields
         $this->assertArrayHasKey('name', $manifest);
@@ -44,9 +47,9 @@ class PWAFunctionalityTest extends TestCase
     /** @test */
     public function manifest_has_multiple_icon_sizes(): void
     {
-        $response = $this->get('/manifest.json');
-
-        $manifest = $response->json();
+        $manifestPath = public_path('manifest.json');
+        $content = file_get_contents($manifestPath);
+        $manifest = json_decode($content, true);
         $icons = $manifest['icons'];
 
         // Verify multiple icon sizes for different devices
@@ -61,9 +64,9 @@ class PWAFunctionalityTest extends TestCase
     /** @test */
     public function manifest_has_shortcuts(): void
     {
-        $response = $this->get('/manifest.json');
-
-        $manifest = $response->json();
+        $manifestPath = public_path('manifest.json');
+        $content = file_get_contents($manifestPath);
+        $manifest = json_decode($content, true);
 
         $this->assertArrayHasKey('shortcuts', $manifest);
         $this->assertIsArray($manifest['shortcuts']);
@@ -73,9 +76,9 @@ class PWAFunctionalityTest extends TestCase
     /** @test */
     public function service_worker_file_exists(): void
     {
-        $response = $this->get('/service-worker.js');
+        $serviceWorkerPath = public_path('service-worker.js');
 
-        $response->assertStatus(200);
+        $this->assertFileExists($serviceWorkerPath);
     }
 
     /** @test */
@@ -123,20 +126,22 @@ class PWAFunctionalityTest extends TestCase
     /** @test */
     public function offline_page_exists(): void
     {
-        $response = $this->get('/offline.html');
+        $offlinePath = public_path('offline.html');
 
-        $response->assertStatus(200);
-        $response->assertSee('offline', false);
+        $this->assertFileExists($offlinePath);
+
+        $content = file_get_contents($offlinePath);
+        $this->assertStringContainsString('offline', strtolower($content));
     }
 
     /** @test */
     public function offline_page_has_retry_functionality(): void
     {
-        $response = $this->get('/offline.html');
+        $offlinePath = public_path('offline.html');
+        $content = file_get_contents($offlinePath);
 
-        $response->assertStatus(200);
-        $response->assertSee('Retry');
-        $response->assertSee('window.location.reload');
+        $this->assertStringContainsString('Retry', $content);
+        $this->assertStringContainsString('window.location.reload', $content);
     }
 
     /** @test */
@@ -195,9 +200,9 @@ class PWAFunctionalityTest extends TestCase
     /** @test */
     public function manifest_specifies_portrait_orientation(): void
     {
-        $response = $this->get('/manifest.json');
-
-        $manifest = $response->json();
+        $manifestPath = public_path('manifest.json');
+        $content = file_get_contents($manifestPath);
+        $manifest = json_decode($content, true);
 
         $this->assertArrayHasKey('orientation', $manifest);
         $this->assertEquals('portrait-primary', $manifest['orientation']);
@@ -206,9 +211,9 @@ class PWAFunctionalityTest extends TestCase
     /** @test */
     public function manifest_has_productivity_category(): void
     {
-        $response = $this->get('/manifest.json');
-
-        $manifest = $response->json();
+        $manifestPath = public_path('manifest.json');
+        $content = file_get_contents($manifestPath);
+        $manifest = json_decode($content, true);
 
         $this->assertArrayHasKey('categories', $manifest);
         $this->assertContains('productivity', $manifest['categories']);

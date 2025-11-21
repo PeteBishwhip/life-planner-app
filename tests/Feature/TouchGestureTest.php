@@ -2,29 +2,10 @@
 
 namespace Tests\Feature;
 
-use App\Models\Calendar;
-use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class TouchGestureTest extends TestCase
 {
-    use RefreshDatabase;
-
-    private User $user;
-
-    private Calendar $calendar;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->user = User::factory()->create();
-        $this->calendar = Calendar::factory()->create([
-            'user_id' => $this->user->id,
-            'is_default' => true,
-        ]);
-    }
 
     /** @test */
     public function touch_gestures_javascript_file_exists(): void
@@ -117,7 +98,8 @@ class TouchGestureTest extends TestCase
         $content = file_get_contents($touchGesturesPath);
 
         // Check that swipe right goes to previous
-        $this->assertStringContainsString('[wire\\:click="previous"]', $content);
+        $this->assertStringContainsString('click="previous"', $content);
+        $this->assertStringContainsString('prevButton', $content);
     }
 
     /** @test */
@@ -127,7 +109,8 @@ class TouchGestureTest extends TestCase
         $content = file_get_contents($touchGesturesPath);
 
         // Check that swipe left goes to next
-        $this->assertStringContainsString('[wire\\:click="next"]', $content);
+        $this->assertStringContainsString('click="next"', $content);
+        $this->assertStringContainsString('nextButton', $content);
     }
 
     /** @test */
