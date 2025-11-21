@@ -83,10 +83,16 @@ class CsvExportServiceTest extends TestCase
     /** @test */
     public function it_exports_multiple_appointments()
     {
+        // Ensure we start with a clean slate
+        $initialCount = $this->calendar->appointments()->count();
+        $this->assertEquals(0, $initialCount, 'Calendar should start with no appointments');
+
         Appointment::factory()->count(3)->create([
             'calendar_id' => $this->calendar->id,
             'user_id' => $this->user->id,
         ]);
+
+        $this->assertEquals(3, $this->calendar->appointments()->count(), 'Should have exactly 3 appointments');
 
         $csvContent = $this->service->exportCalendar($this->calendar);
 

@@ -171,12 +171,24 @@ class IcsImportService
      */
     protected function isAllDayEvent($vevent): bool
     {
-        $dtstart = $vevent->getDtstart();
+        // Get dtstart with parameters
+        $dtstartPc = $vevent->getDtstart(true);
 
-        if (is_array($dtstart)) {
-            $params = $dtstart[0] ?? [];
+        if (! $dtstartPc) {
+            return false;
+        }
 
-            return isset($params['VALUE']) && $params['VALUE'] === 'DATE';
+        // Check if params contain VALUE=DATE
+        if (isset($dtstartPc->params['VALUE'])) {
+            $value = $dtstartPc->params['VALUE'];
+
+            // Handle if it's an array
+            if (is_array($value)) {
+                return in_array('DATE', $value);
+            }
+
+            // Handle if it's a string
+            return $value === 'DATE';
         }
 
         return false;

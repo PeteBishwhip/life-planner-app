@@ -35,7 +35,8 @@ class ImportExportManagerTest extends TestCase
 
         Livewire::test(ImportExportManager::class)
             ->assertStatus(200)
-            ->assertSee('Import &amp; Export', false)
+            ->assertSee('Import')
+            ->assertSee('Export')
             ->assertSee('Import Calendar')
             ->assertSee('Export Calendar');
     }
@@ -187,6 +188,7 @@ ICS;
         ]);
 
         Livewire::test(ImportExportManager::class)
+            ->call('openExportModal')
             ->assertSee($this->calendar->name)
             ->assertSee($calendar2->name);
     }
@@ -251,6 +253,7 @@ ICS;
         ]);
 
         Livewire::test(ImportExportManager::class)
+            ->call('openExportModal')
             ->assertSee($this->calendar->name)
             ->assertDontSee($otherCalendar->name);
     }

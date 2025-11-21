@@ -112,8 +112,9 @@ class PdfExportService
         $endOfMonth = $month->copy()->endOfMonth();
 
         // Start from the first day of the week containing the 1st of the month
-        $current = $startOfMonth->copy()->startOfWeek();
-        $end = $endOfMonth->copy()->endOfWeek();
+        // Use Sunday as start of week to ensure 7-day weeks
+        $current = $startOfMonth->copy()->startOfWeek(Carbon::SUNDAY);
+        $end = $endOfMonth->copy()->endOfWeek(Carbon::SUNDAY);
 
         $weeks = [];
         $week = [];
