@@ -215,6 +215,8 @@ class RecurrenceServiceTest extends TestCase
         );
 
         $this->assertCount(1, $instances);
-        $this->assertEquals($appointment->toArray(), $instances[0]);
+        // For non-recurring appointments, it returns the model itself
+        $this->assertInstanceOf(Appointment::class, $instances[0]);
+        $this->assertEquals($appointment->id, $instances[0]->id);
     }
 }

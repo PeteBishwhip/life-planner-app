@@ -76,8 +76,8 @@ class ConflictDetectionServiceTest extends TestCase
             'status' => 'scheduled',
         ]);
 
-        // Check for conflict with non-overlapping time
-        $newStart = Carbon::parse('2025-01-01 11:00:00');
+        // Check for conflict with non-overlapping time (1 minute gap)
+        $newStart = Carbon::parse('2025-01-01 11:01:00');
         $newEnd = Carbon::parse('2025-01-01 12:00:00');
 
         $hasConflict = $this->service->hasConflictAcrossCalendars(

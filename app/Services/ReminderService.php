@@ -38,17 +38,22 @@ class ReminderService
     {
         $checkTime = $checkTime ?? now();
 
-        return AppointmentReminder::query()
+        // Get all unsent reminders for scheduled appointments
+        $reminders = AppointmentReminder::query()
             ->where('is_sent', false)
-            ->whereHas('appointment', function ($query) use ($checkTime) {
-                $query->where('status', 'scheduled')
-                    ->where(function ($q) use ($checkTime) {
-                        // Get appointments whose reminder time has passed
-                        $q->whereRaw('DATE_SUB(start_datetime, INTERVAL reminder_minutes_before MINUTE) <= ?', [$checkTime]);
-                    });
+            ->whereHas('appointment', function ($query) {
+                $query->where('status', 'scheduled');
             })
             ->with(['appointment', 'appointment.user', 'appointment.calendar'])
             ->get();
+
+        // Filter in PHP to avoid database-specific SQL
+        return $reminders->filter(function ($reminder) use ($checkTime) {
+            $reminderTime = Carbon::parse($reminder->appointment->start_datetime)
+                ->subMinutes($reminder->reminder_minutes_before);
+
+            return $reminderTime->lte($checkTime);
+        });
     }
 
     /**
