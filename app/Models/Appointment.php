@@ -152,6 +152,77 @@ class Appointment extends Model
         return $query->where('is_all_day', true);
     }
 
+    public function scopeSearch(Builder $query, ?string $searchTerm): Builder
+    {
+        if (empty($searchTerm)) {
+            return $query;
+        }
+
+        return $query->where(function ($q) use ($searchTerm) {
+            $q->where('title', 'like', "%{$searchTerm}%")
+                ->orWhere('description', 'like', "%{$searchTerm}%")
+                ->orWhere('location', 'like', "%{$searchTerm}%");
+        });
+    }
+
+    public function scopeByLocation(Builder $query, ?string $location): Builder
+    {
+        if (empty($location)) {
+            return $query;
+        }
+
+        return $query->where('location', 'like', "%{$location}%");
+    }
+
+    public function scopeByStatus(Builder $query, ?string $status): Builder
+    {
+        if (empty($status)) {
+            return $query;
+        }
+
+        return $query->where('status', $status);
+    }
+
+    public function scopeByColor(Builder $query, ?string $color): Builder
+    {
+        if (empty($color)) {
+            return $query;
+        }
+
+        return $query->where('color', $color);
+    }
+
+    public function scopeToday(Builder $query): Builder
+    {
+        return $query->whereDate('start_datetime', today());
+    }
+
+    public function scopeThisWeek(Builder $query): Builder
+    {
+        return $query->whereBetween('start_datetime', [
+            now()->startOfWeek(),
+            now()->endOfWeek(),
+        ]);
+    }
+
+    public function scopeThisMonth(Builder $query): Builder
+    {
+        return $query->whereBetween('start_datetime', [
+            now()->startOfMonth(),
+            now()->endOfMonth(),
+        ]);
+    }
+
+    public function scopeRecurring(Builder $query): Builder
+    {
+        return $query->whereNotNull('recurrence_rule');
+    }
+
+    public function scopeNonRecurring(Builder $query): Builder
+    {
+        return $query->whereNull('recurrence_rule');
+    }
+
     /**
      * Helper Methods
      */

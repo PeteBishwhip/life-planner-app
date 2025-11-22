@@ -27,6 +27,14 @@ class User extends Authenticatable
         'date_format_preference',
         'time_format_preference',
         'default_view',
+        'enable_email_notifications',
+        'enable_browser_notifications',
+        'enable_daily_digest',
+        'daily_digest_time',
+        'week_start_day',
+        'default_appointment_duration',
+        'default_reminder_times',
+        'theme',
     ];
 
     /**
@@ -49,6 +57,10 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'enable_email_notifications' => 'boolean',
+            'enable_browser_notifications' => 'boolean',
+            'enable_daily_digest' => 'boolean',
+            'default_reminder_times' => 'array',
         ];
     }
 
