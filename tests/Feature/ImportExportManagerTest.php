@@ -126,7 +126,17 @@ END:VEVENT
 END:VCALENDAR
 ICS;
 
-        $file = UploadedFile::fake()->createWithContent('test.ics', $icsContent);
+        // Create a real file on disk
+        $tempPath = storage_path('app/private/temp/test-import.ics');
+        file_put_contents($tempPath, $icsContent);
+
+        $file = new UploadedFile(
+            $tempPath,
+            'test.ics',
+            'text/calendar',
+            null,
+            true // test mode
+        );
 
         Livewire::test(ImportExportManager::class)
             ->set('importFile', $file)
@@ -148,6 +158,11 @@ ICS;
             'user_id' => $this->user->id,
             'title' => 'Test Event',
         ]);
+
+        // Cleanup
+        if (file_exists($tempPath)) {
+            unlink($tempPath);
+        }
     }
 
     #[Test]
@@ -214,7 +229,17 @@ ICS;
         // Create an invalid ICS file
         $icsContent = 'INVALID ICS CONTENT';
 
-        $file = UploadedFile::fake()->createWithContent('invalid.ics', $icsContent);
+        // Create a real file on disk
+        $tempPath = storage_path('app/private/temp/invalid.ics');
+        file_put_contents($tempPath, $icsContent);
+
+        $file = new UploadedFile(
+            $tempPath,
+            'invalid.ics',
+            'text/calendar',
+            null,
+            true // test mode
+        );
 
         Livewire::test(ImportExportManager::class)
             ->set('importFile', $file)
@@ -222,6 +247,11 @@ ICS;
             ->set('importType', 'ics')
             ->call('import')
             ->assertSet('importResult.success', true); // Completes but with 0 records
+
+        // Cleanup
+        if (file_exists($tempPath)) {
+            unlink($tempPath);
+        }
     }
 
     #[Test]
@@ -242,7 +272,17 @@ END:VEVENT
 END:VCALENDAR
 ICS;
 
-        $file = UploadedFile::fake()->createWithContent('test.ics', $icsContent);
+        // Create a real file on disk
+        $tempPath = storage_path('app/private/temp/test-event.ics');
+        file_put_contents($tempPath, $icsContent);
+
+        $file = new UploadedFile(
+            $tempPath,
+            'test.ics',
+            'text/calendar',
+            null,
+            true // test mode
+        );
 
         Livewire::test(ImportExportManager::class)
             ->set('importFile', $file)
@@ -250,6 +290,11 @@ ICS;
             ->set('importType', 'ics')
             ->call('import')
             ->assertDispatched('appointments-updated');
+
+        // Cleanup
+        if (file_exists($tempPath)) {
+            unlink($tempPath);
+        }
     }
 
     #[Test]
