@@ -26,7 +26,7 @@ class DailyDigestServiceTest extends TestCase
     {
         parent::setUp();
 
-        $this->service = new DailyDigestService();
+        $this->service = new DailyDigestService;
         $this->user = User::factory()->create();
         $this->calendar = Calendar::factory()->create([
             'user_id' => $this->user->id,

@@ -12,7 +12,7 @@ class KeyboardShortcutServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->service = new KeyboardShortcutService();
+        $this->service = new KeyboardShortcutService;
     }
 
     public function test_get_shortcuts_returns_array(): void

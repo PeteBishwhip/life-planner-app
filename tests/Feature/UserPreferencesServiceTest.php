@@ -19,7 +19,7 @@ class UserPreferencesServiceTest extends TestCase
     {
         parent::setUp();
 
-        $this->service = new UserPreferencesService();
+        $this->service = new UserPreferencesService;
         $this->user = User::factory()->create([
             'timezone' => 'America/New_York',
             'date_format_preference' => 'Y-m-d',

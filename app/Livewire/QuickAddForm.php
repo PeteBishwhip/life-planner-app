@@ -11,8 +11,11 @@ use Livewire\Component;
 class QuickAddForm extends Component
 {
     public string $input = '';
+
     public ?array $parsedData = null;
+
     public bool $showPreview = false;
+
     public ?int $defaultCalendarId = null;
 
     protected NaturalLanguageParserService $parser;

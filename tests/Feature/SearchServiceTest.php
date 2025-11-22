@@ -14,15 +14,18 @@ class SearchServiceTest extends TestCase
     use RefreshDatabase;
 
     protected SearchService $searchService;
+
     protected User $user;
+
     protected Calendar $personalCalendar;
+
     protected Calendar $businessCalendar;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->searchService = new SearchService();
+        $this->searchService = new SearchService;
         $this->user = User::factory()->create();
         $this->personalCalendar = Calendar::factory()->create([
             'user_id' => $this->user->id,

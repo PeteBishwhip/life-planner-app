@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use Carbon\Carbon;
-use Illuminate\Support\Str;
 
 class NaturalLanguageParserService
 {
@@ -131,6 +130,7 @@ class NaturalLanguageParserService
         foreach ($this->dayOfWeekPatterns as $day => $dayNumber) {
             if (preg_match("/\b(?:next|this)\s+{$day}\b/i", $lowerInput)) {
                 $modifier = str_contains($lowerInput, 'next') ? 'next' : 'this';
+
                 return Carbon::parse("{$modifier} {$day}")->startOfDay();
             }
         }
@@ -143,6 +143,7 @@ class NaturalLanguageParserService
                 if ($targetDate->isSameDay(now()) || $targetDate->isPast()) {
                     $targetDate = now()->next($dayNumber);
                 }
+
                 return $targetDate->startOfDay();
             }
         }
@@ -187,6 +188,7 @@ class NaturalLanguageParserService
             if ($hour >= 1 && $hour <= 7) {
                 $hour += 12;
             }
+
             return now()->setTime($hour, 0);
         }
 
@@ -206,11 +208,13 @@ class NaturalLanguageParserService
         // Check for explicit duration
         if (preg_match('/for\s+(\d+)\s*(?:hour|hr|hours|hrs)\b/i', $input, $matches)) {
             $hours = (int) $matches[1];
+
             return new \DateInterval("PT{$hours}H");
         }
 
         if (preg_match('/for\s+(\d+)\s*(?:minute|min|minutes|mins)\b/i', $input, $matches)) {
             $minutes = (int) $matches[1];
+
             return new \DateInterval("PT{$minutes}M");
         }
 
@@ -218,6 +222,7 @@ class NaturalLanguageParserService
         if (preg_match('/for\s+(\d+\.?\d*)\s*(?:hour|hr|hours|hrs)\b/i', $input, $matches)) {
             $hours = (float) $matches[1];
             $totalMinutes = (int) ($hours * 60);
+
             return new \DateInterval("PT{$totalMinutes}M");
         }
 
@@ -240,7 +245,7 @@ class NaturalLanguageParserService
         ];
 
         foreach ($temporalKeywords as $keyword) {
-            $title = preg_replace('/\b' . $keyword . '\b/i', '', $title);
+            $title = preg_replace('/\b'.$keyword.'\b/i', '', $title);
         }
 
         // Remove time expressions

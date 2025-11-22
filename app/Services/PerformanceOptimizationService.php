@@ -105,7 +105,7 @@ class PerformanceOptimizationService
         $cacheKey = $this->generateCacheKey('appointments', $userId, $filters);
 
         return Cache::remember($cacheKey, $this->cacheDuration, function () use ($userId, $filters) {
-            $searchService = new SearchService();
+            $searchService = new SearchService;
 
             return $searchService->search($userId, $filters)
                 ->select([

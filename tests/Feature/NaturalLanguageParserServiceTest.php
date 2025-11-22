@@ -16,7 +16,7 @@ class NaturalLanguageParserServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->parser = new NaturalLanguageParserService();
+        $this->parser = new NaturalLanguageParserService;
 
         // Set a fixed date for consistent testing
         Carbon::setTestNow('2025-01-15 10:00:00'); // Wednesday

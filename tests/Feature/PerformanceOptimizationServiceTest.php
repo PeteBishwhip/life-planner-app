@@ -24,7 +24,7 @@ class PerformanceOptimizationServiceTest extends TestCase
     {
         parent::setUp();
 
-        $this->service = new PerformanceOptimizationService();
+        $this->service = new PerformanceOptimizationService;
         $this->user = User::factory()->create();
         $this->calendar = Calendar::factory()->create([
             'user_id' => $this->user->id,

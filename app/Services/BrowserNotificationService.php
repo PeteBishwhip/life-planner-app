@@ -144,6 +144,6 @@ class BrowserNotificationService
      */
     public function sendTestNotification(User $user): void
     {
-        $user->notify(new \App\Notifications\TestNotification());
+        $user->notify(new \App\Notifications\TestNotification);
     }
 }

@@ -23,7 +23,7 @@ class KeyboardShortcutsHelp extends Component
 
     public function render()
     {
-        $shortcutService = new KeyboardShortcutService();
+        $shortcutService = new KeyboardShortcutService;
         $shortcuts = $shortcutService->getShortcutsByCategory();
 
         return view('livewire.keyboard-shortcuts-help', [
