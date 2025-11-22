@@ -2,11 +2,12 @@
 
 namespace Tests\Feature;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class TouchGestureTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function touch_gestures_javascript_file_exists(): void
     {
         $touchGesturesPath = resource_path('js/touch-gestures.js');
@@ -14,7 +15,7 @@ class TouchGestureTest extends TestCase
         $this->assertFileExists($touchGesturesPath);
     }
 
-    /** @test */
+    #[Test]
     public function touch_gestures_is_imported_in_app_js(): void
     {
         $appJsPath = resource_path('js/app.js');
@@ -23,7 +24,7 @@ class TouchGestureTest extends TestCase
         $this->assertStringContainsString("import './touch-gestures'", $content);
     }
 
-    /** @test */
+    #[Test]
     public function swipe_gesture_functions_are_defined(): void
     {
         $touchGesturesPath = resource_path('js/touch-gestures.js');
@@ -36,7 +37,7 @@ class TouchGestureTest extends TestCase
         $this->assertStringContainsString('handleSwipe', $content);
     }
 
-    /** @test */
+    #[Test]
     public function pull_to_refresh_function_is_defined(): void
     {
         $touchGesturesPath = resource_path('js/touch-gestures.js');
@@ -47,7 +48,7 @@ class TouchGestureTest extends TestCase
         $this->assertStringContainsString('pullThreshold', $content);
     }
 
-    /** @test */
+    #[Test]
     public function long_press_detection_is_implemented(): void
     {
         $touchGesturesPath = resource_path('js/touch-gestures.js');
@@ -58,7 +59,7 @@ class TouchGestureTest extends TestCase
         $this->assertStringContainsString('longPressDuration', $content);
     }
 
-    /** @test */
+    #[Test]
     public function swipe_respects_minimum_distance(): void
     {
         $touchGesturesPath = resource_path('js/touch-gestures.js');
@@ -68,7 +69,7 @@ class TouchGestureTest extends TestCase
         $this->assertStringContainsString('minSwipeDistance', $content);
     }
 
-    /** @test */
+    #[Test]
     public function swipe_excludes_form_inputs(): void
     {
         $touchGesturesPath = resource_path('js/touch-gestures.js');
@@ -80,7 +81,7 @@ class TouchGestureTest extends TestCase
         $this->assertStringContainsString('SELECT', $content);
     }
 
-    /** @test */
+    #[Test]
     public function gestures_reinitialize_after_livewire_navigation(): void
     {
         $touchGesturesPath = resource_path('js/touch-gestures.js');
@@ -90,7 +91,7 @@ class TouchGestureTest extends TestCase
         $this->assertStringContainsString('livewire:navigated', $content);
     }
 
-    /** @test */
+    #[Test]
     public function swipe_right_triggers_previous_navigation(): void
     {
         $touchGesturesPath = resource_path('js/touch-gestures.js');
@@ -101,7 +102,7 @@ class TouchGestureTest extends TestCase
         $this->assertStringContainsString('prevButton', $content);
     }
 
-    /** @test */
+    #[Test]
     public function swipe_left_triggers_next_navigation(): void
     {
         $touchGesturesPath = resource_path('js/touch-gestures.js');
@@ -112,7 +113,7 @@ class TouchGestureTest extends TestCase
         $this->assertStringContainsString('nextButton', $content);
     }
 
-    /** @test */
+    #[Test]
     public function pull_to_refresh_has_visual_feedback(): void
     {
         $touchGesturesPath = resource_path('js/touch-gestures.js');
@@ -123,7 +124,7 @@ class TouchGestureTest extends TestCase
         $this->assertStringContainsString('translateY', $content);
     }
 
-    /** @test */
+    #[Test]
     public function gestures_use_passive_event_listeners(): void
     {
         $touchGesturesPath = resource_path('js/touch-gestures.js');

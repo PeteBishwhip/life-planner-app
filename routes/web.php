@@ -17,6 +17,7 @@ Route::view('profile', 'profile')
 // Calendar Dashboard Route
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('/calendar', 'calendar.dashboard')->name('calendar.dashboard');
+    Route::view('/import-export', 'import-export')->name('import-export');
 });
 
 // Calendar Routes
