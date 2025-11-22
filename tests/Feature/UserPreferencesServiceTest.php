@@ -52,9 +52,12 @@ class UserPreferencesServiceTest extends TestCase
 
     public function test_get_preferences_returns_defaults_for_missing_values(): void
     {
-        $newUser = User::factory()->create([
-            'timezone' => null,
-            'default_view' => null,
+        $newUser = User::factory()->create();
+
+        // Reset to database defaults to simulate a user created before preference columns
+        $newUser->update([
+            'timezone' => 'UTC',
+            'default_view' => 'month',
         ]);
 
         $preferences = $this->service->getPreferences($newUser);

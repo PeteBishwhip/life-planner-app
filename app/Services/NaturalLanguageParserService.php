@@ -236,6 +236,25 @@ class NaturalLanguageParserService
     {
         $title = $input;
 
+        // Remove location markers first (before "at" is removed for time)
+        $title = preg_replace('/\b(?:at|in)\s+[A-Z][A-Za-z0-9\s,]+(?=\s+(?:on|from|at|for|tomorrow|today|next|this|monday|tuesday|wednesday|thursday|friday|saturday|sunday|mon|tue|wed|thu|fri|sat|sun|\d))/i', '', $title);
+
+        // Remove time expressions with "at" prefix
+        $title = preg_replace('/\bat\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)?\b/i', '', $title);
+        $title = preg_replace('/\b(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b/i', '', $title);
+        $title = preg_replace('/\b(\d{1,2}):(\d{2})\b/', '', $title);
+
+        // Remove "on" before date patterns
+        $title = preg_replace('/\bon\s+(\d{4})-(\d{1,2})-(\d{1,2})\b/', '', $title);
+        $title = preg_replace('/\bon\s+(\d{1,2})\/(\d{1,2})\/(\d{4})\b/', '', $title);
+
+        // Remove date patterns without "on"
+        $title = preg_replace('/\b(\d{4})-(\d{1,2})-(\d{1,2})\b/', '', $title);
+        $title = preg_replace('/\b(\d{1,2})\/(\d{1,2})\/(\d{4})\b/', '', $title);
+
+        // Remove duration expressions
+        $title = preg_replace('/\bfor\s+(\d+\.?\d*)\s*(?:hour|hr|hours|hrs|minute|min|minutes|mins)\b/i', '', $title);
+
         // Remove common temporal keywords
         $temporalKeywords = [
             'today', 'tomorrow', 'yesterday', 'next week',
@@ -247,21 +266,6 @@ class NaturalLanguageParserService
         foreach ($temporalKeywords as $keyword) {
             $title = preg_replace('/\b'.$keyword.'\b/i', '', $title);
         }
-
-        // Remove time expressions
-        $title = preg_replace('/\b(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b/i', '', $title);
-        $title = preg_replace('/\bat\s+(\d{1,2})\b/', '', $title);
-        $title = preg_replace('/\b(\d{1,2}):(\d{2})\b/', '', $title);
-
-        // Remove duration expressions
-        $title = preg_replace('/for\s+(\d+\.?\d*)\s*(?:hour|hr|hours|hrs|minute|min|minutes|mins)\b/i', '', $title);
-
-        // Remove location markers
-        $title = preg_replace('/\b(?:at|in)\s+[A-Z][A-Za-z0-9\s,]+/i', '', $title);
-
-        // Remove date patterns
-        $title = preg_replace('/\b(\d{4})-(\d{1,2})-(\d{1,2})\b/', '', $title);
-        $title = preg_replace('/\b(\d{1,2})\/(\d{1,2})\/(\d{4})\b/', '', $title);
 
         // Clean up multiple spaces and trim
         $title = preg_replace('/\s+/', ' ', $title);

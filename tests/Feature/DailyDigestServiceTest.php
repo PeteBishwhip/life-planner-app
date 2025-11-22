@@ -286,8 +286,8 @@ class DailyDigestServiceTest extends TestCase
             'calendar_id' => $this->calendar->id,
             'title' => 'Tomorrow Meeting',
             'status' => 'scheduled',
-            'start_datetime' => tomorrow()->setTime(9, 0),
-            'end_datetime' => tomorrow()->setTime(10, 0),
+            'start_datetime' => today()->addDay()->setTime(9, 0),
+            'end_datetime' => today()->addDay()->setTime(10, 0),
         ]);
 
         $preview = $this->service->getDigestPreview($this->user);

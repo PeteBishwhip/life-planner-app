@@ -213,8 +213,8 @@ class SearchServiceTest extends TestCase
             'user_id' => $this->user->id,
             'calendar_id' => $this->personalCalendar->id,
             'title' => 'Tomorrow Appointment',
-            'start_datetime' => tomorrow()->addHours(10),
-            'end_datetime' => tomorrow()->addHours(11),
+            'start_datetime' => today()->addDay()->addHours(10),
+            'end_datetime' => today()->addDay()->addHours(11),
         ]);
 
         $results = $this->searchService->search($this->user->id, [
