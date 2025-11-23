@@ -1,0 +1,20 @@
+{
+    "mcpServers": {
+        "laravel-boost": {
+            "command": "/Users/pete/Library/Application Support/Herd/bin/php83",
+            "args": [
+                "/Users/pete/Code/life-planner-app/artisan",
+                "boost:mcp"
+            ]
+        },
+        "herd": {
+            "command": "/Users/pete/Library/Application Support/Herd/bin/php83",
+            "args": [
+                "/Applications/Herd.app/Contents/Resources/herd-mcp.phar"
+            ],
+            "env": {
+                "SITE_PATH": "/Users/pete/Code/life-planner-app"
+            }
+        }
+    }
+}
