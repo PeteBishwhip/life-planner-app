@@ -59,12 +59,14 @@ class NaturalLanguageParserService
         ];
 
         // Extract location (text after " at " or " in ")
-        if (preg_match('/\b(?:at|in)\s+([A-Z][A-Za-z0-9\s,]+?)(?:\s+(?:on|from|at|for|tomorrow|today|next|this)|\s*$)/i', $input, $locationMatch)) {
-            $potentialLocation = trim($locationMatch[1]);
+        // Use lookahead to not consume date/time keywords
+        if (preg_match('/\b(at|in)\s+([A-Z][A-Za-z0-9\s,]+?)(?=\s+(?:on|from|at|for|tomorrow|today|next|this|monday|tuesday|wednesday|thursday|friday|saturday|sunday)|\s*$)/i', $input, $locationMatch)) {
+            $potentialLocation = trim($locationMatch[2]);
             // Make sure it's not a time expression
-            if (! preg_match('/^\d{1,2}(?::\d{2})?\s*(?:am|pm)?$/i', $potentialLocation)) {
+            if (! preg_match('/^\d{1,2}(?::\d{2})?\s*(?:am|pm)?$/i', $potentialLocation) && ! in_array(strtolower($potentialLocation), ['noon', 'midnight'])) {
                 $result['location'] = $potentialLocation;
-                $input = str_replace($locationMatch[0], ' ', $input);
+                // Only remove the location marker and location text, not the following keywords
+                $input = str_replace($locationMatch[1].' '.$potentialLocation, '', $input);
             }
         }
 
@@ -156,6 +158,17 @@ class NaturalLanguageParserService
      */
     protected function parseTime(string $input): ?Carbon
     {
+        $lowerInput = strtolower($input);
+
+        // Check for noon and midnight (with word boundaries)
+        if (preg_match('/\bnoon\b/', $lowerInput)) {
+            return now()->setTime(12, 0);
+        }
+
+        if (preg_match('/\bmidnight\b/', $lowerInput)) {
+            return now()->setTime(0, 0);
+        }
+
         // 12-hour format with am/pm
         if (preg_match('/\b(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b/i', $input, $matches)) {
             $hour = (int) $matches[1];
@@ -241,8 +254,10 @@ class NaturalLanguageParserService
 
         // Remove time expressions with "at" prefix
         $title = preg_replace('/\bat\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)?\b/i', '', $title);
+        $title = preg_replace('/\bat\s+(noon|midnight)\b/i', '', $title);
         $title = preg_replace('/\b(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b/i', '', $title);
         $title = preg_replace('/\b(\d{1,2}):(\d{2})\b/', '', $title);
+        $title = preg_replace('/\b(noon|midnight)\b/i', '', $title);
 
         // Remove "on" before date patterns
         $title = preg_replace('/\bon\s+(\d{4})-(\d{1,2})-(\d{1,2})\b/', '', $title);

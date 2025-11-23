@@ -207,7 +207,7 @@ class NaturalLanguageParserServiceTest extends TestCase
         $this->assertEquals('Standup', $result['title']);
         $this->assertEquals(Carbon::MONDAY, $result['start_datetime']->dayOfWeek);
         $this->assertEquals(9, $result['start_datetime']->hour);
-        $this->assertEquals(15, $result['end_datetime']->diffInMinutes($result['start_datetime']));
+        $this->assertEquals(15, $result['start_datetime']->diffInMinutes($result['end_datetime']));
     }
 
     public function test_parse_without_explicit_date_defaults_to_today(): void
@@ -222,7 +222,7 @@ class NaturalLanguageParserServiceTest extends TestCase
         $result = $this->parser->parse('MEETING TOMORROW AT 2PM');
 
         $this->assertEquals('MEETING', $result['title']);
-        $this->assertTrue($result['start_datetime']->isToday()->addDay()->isSameDay($result['start_datetime']));
+        $this->assertTrue($result['start_datetime']->isTomorrow());
     }
 
     public function test_parse_mixed_case_input(): void
@@ -230,7 +230,7 @@ class NaturalLanguageParserServiceTest extends TestCase
         $result = $this->parser->parse('Client Call ToMoRRoW at 3PM');
 
         $this->assertEquals('Client Call', $result['title']);
-        $this->assertTrue($result['start_datetime']->isToday()->addDay()->isSameDay($result['start_datetime']));
+        $this->assertTrue($result['start_datetime']->isTomorrow());
     }
 
     public function test_parse_minimal_input(): void
@@ -284,7 +284,7 @@ class NaturalLanguageParserServiceTest extends TestCase
         $this->assertEquals('Conference Room B', $result['location']);
         $this->assertEquals(Carbon::MONDAY, $result['start_datetime']->dayOfWeek);
         $this->assertEquals(14, $result['start_datetime']->hour);
-        $this->assertEquals(90, $result['end_datetime']->diffInMinutes($result['start_datetime']));
+        $this->assertEquals(90, $result['start_datetime']->diffInMinutes($result['end_datetime']));
     }
 
     public function test_get_supported_formats_returns_examples(): void
@@ -307,7 +307,7 @@ class NaturalLanguageParserServiceTest extends TestCase
         $result = $this->parser->parse('  Meeting   tomorrow   at   2pm  ');
 
         $this->assertEquals('Meeting', $result['title']);
-        $this->assertTrue($result['start_datetime']->isToday()->addDay()->isSameDay($result['start_datetime']));
+        $this->assertTrue($result['start_datetime']->isTomorrow());
     }
 
     public function test_parse_saturday(): void
