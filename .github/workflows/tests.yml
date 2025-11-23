@@ -49,11 +49,10 @@ jobs:
       - name: Generate application key
         run: php artisan key:generate
 
-      - name: Create SQLite database
-        run: touch database/database.sqlite
-
-      - name: Run migrations
-        run: php artisan migrate --force
+      - name: Configure database for testing
+        run: |
+          echo "DB_CONNECTION=sqlite" >> .env
+          echo "DB_DATABASE=:memory:" >> .env
 
       - name: Execute tests
         run: php artisan test
