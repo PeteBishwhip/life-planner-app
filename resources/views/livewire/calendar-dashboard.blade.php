@@ -1,4 +1,4 @@
-<div class="space-y-4 md:space-y-6">
+<div class="space-y-4 md:space-y-6" x-data="{ focusSearch() { $nextTick(() => $refs.search?.focus()); } }" x-on:keydown.slash.prevent="focusSearch()">
     <!-- View Controls -->
     <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <!-- View Type Buttons - More compact on mobile -->
@@ -14,6 +14,30 @@
             </button>
             <button wire:click="changeView('list')" class="min-h-[44px] flex-1 rounded-md px-3 py-2 text-xs font-semibold sm:flex-none sm:px-4 sm:text-sm {{ $viewType === 'list' ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50' }} transition-colors">
                 List
+            </button>
+        </div>
+
+        <!-- Search + Quick Add (desktop) -->
+        <div class="flex items-center gap-2">
+            <div class="hidden md:block">
+                <label for="global-search" class="sr-only">Search appointments</label>
+                <input
+                    id="global-search"
+                    x-ref="search"
+                    wire:model.live.debounce.300ms="search"
+                    type="search"
+                    placeholder="Search appointments... (/ to focus)"
+                    class="min-h-[44px] w-64 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 placeholder:text-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                />
+            </div>
+
+            <button
+                type="button"
+                onclick="Livewire.dispatch('open-appointment-modal')"
+                class="hidden md:inline-flex min-h-[44px] items-center gap-2 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-indigo-700"
+            >
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                <span>Quick Add</span>
             </button>
         </div>
 

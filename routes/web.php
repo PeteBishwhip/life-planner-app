@@ -18,6 +18,8 @@ Route::view('profile', 'profile')
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('/calendar', 'calendar.dashboard')->name('calendar.dashboard');
     Route::view('/import-export', 'import-export')->name('import-export');
+    Route::get('/search', \App\Livewire\SearchAppointments::class)->name('search');
+    Route::get('/settings', \App\Livewire\UserPreferences::class)->name('settings');
 });
 
 // Calendar Routes

@@ -16,7 +16,8 @@ new class extends Component
     }
 }; ?>
 
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
+<div>
+    <nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
@@ -36,9 +37,21 @@ new class extends Component
                     <x-nav-link :href="route('calendar.dashboard')" :active="request()->routeIs('calendar.*')" wire:navigate>
                         {{ __('Calendar') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('search')" :active="request()->routeIs('search')" wire:navigate>
+                        {{ __('Search') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('calendars.index')" :active="request()->routeIs('calendars.*')" wire:navigate>
+                        {{ __('Calendars') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('appointments.index')" :active="request()->routeIs('appointments.*')" wire:navigate>
+                        {{ __('Appointments') }}
+                    </x-nav-link>
                     <x-nav-link :href="route('import-export')" :active="request()->routeIs('import-export')" wire:navigate>
                         {{ __('Import/Export') }}
                     </x-nav-link>
+                    <button type="button" @click="Livewire.dispatch('open-shortcuts')" class="inline-flex items-center text-sm text-gray-600 hover:text-gray-900">
+                        {{ __('Help') }}
+                    </button>
                 </div>
             </div>
 
@@ -60,6 +73,10 @@ new class extends Component
                     <x-slot name="content">
                         <x-dropdown-link :href="route('profile')" wire:navigate>
                             {{ __('Profile') }}
+                        </x-dropdown-link>
+
+                        <x-dropdown-link :href="route('settings')" wire:navigate>
+                            {{ __('Settings') }}
                         </x-dropdown-link>
 
                         <!-- Authentication -->
@@ -93,9 +110,21 @@ new class extends Component
             <x-responsive-nav-link :href="route('calendar.dashboard')" :active="request()->routeIs('calendar.*')" wire:navigate>
                 {{ __('Calendar') }}
             </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('search')" :active="request()->routeIs('search')" wire:navigate>
+                {{ __('Search') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('calendars.index')" :active="request()->routeIs('calendars.*')" wire:navigate>
+                {{ __('Calendars') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('appointments.index')" :active="request()->routeIs('appointments.*')" wire:navigate>
+                {{ __('Appointments') }}
+            </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('import-export')" :active="request()->routeIs('import-export')" wire:navigate>
                 {{ __('Import/Export') }}
             </x-responsive-nav-link>
+            <button type="button" @click="Livewire.dispatch('open-shortcuts')" class="w-full text-left block px-4 py-2 text-sm text-gray-600 hover:text-gray-900">
+                {{ __('Help') }}
+            </button>
         </div>
 
         <!-- Responsive Settings Options -->
@@ -110,6 +139,10 @@ new class extends Component
                     {{ __('Profile') }}
                 </x-responsive-nav-link>
 
+                <x-responsive-nav-link :href="route('settings')" wire:navigate>
+                    {{ __('Settings') }}
+                </x-responsive-nav-link>
+
                 <!-- Authentication -->
                 <button wire:click="logout" class="w-full text-start">
                     <x-responsive-nav-link>
@@ -119,4 +152,34 @@ new class extends Component
             </div>
         </div>
     </div>
-</nav>
+    </nav>
+<!-- Keyboard Shortcuts Modal (handled via Livewire event to keep consistent with other modals) -->
+    <div x-data="{ open: false }"
+     x-on:open-shortcuts.window="open = true"
+     x-show="open"
+     x-cloak
+     class="fixed inset-0 z-50 flex items-center justify-center">
+    <div class="absolute inset-0 bg-gray-900/50" @click="open = false"></div>
+    <div class="relative w-full max-w-lg mx-4 rounded-lg bg-white shadow-lg">
+        <div class="flex items-center justify-between border-b px-5 py-4">
+            <h3 class="text-lg font-semibold text-gray-900">Keyboard Shortcuts</h3>
+            <button class="text-gray-400 hover:text-gray-600" @click="open = false" aria-label="Close">
+                <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <div class="px-5 py-4">
+            <ul class="space-y-2 text-sm text-gray-700">
+                <li><span class="font-medium">J / K</span> — Next / Previous day or week</li>
+                <li><span class="font-medium">T</span> — Jump to Today</li>
+                <li><span class="font-medium">M / W / D / L</span> — Switch to Month / Week / Day / List view</li>
+                <li><span class="font-medium">/</span> — Focus search</li>
+                <li><span class="font-medium">C</span> — Quick add appointment</li>
+            </ul>
+        </div>
+        <div class="flex justify-end border-t px-5 py-3">
+            <button class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500" @click="open = false">Close</button>
+        </div>
+    </div>
+
+    </div>
+</div>

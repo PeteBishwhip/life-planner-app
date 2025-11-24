@@ -52,7 +52,9 @@ class AppointmentController extends Controller
             ? $request->calendar_id
             : ($defaultCalendar ? $defaultCalendar->id : null);
 
-        return view('appointments.create', compact('calendars', 'preselectedDate', 'preselectedCalendar'));
+        $defaultReminders = auth()->user()->default_reminder_times ?? [15];
+
+        return view('appointments.create', compact('calendars', 'preselectedDate', 'preselectedCalendar', 'defaultReminders'));
     }
 
     /**
@@ -83,6 +85,9 @@ class AppointmentController extends Controller
         }
 
         $appointment = auth()->user()->appointments()->create($validated);
+
+        // Handle reminders
+        $this->syncReminders($appointment, $request->input('reminders', []));
 
         return redirect()
             ->route('calendar.dashboard')
@@ -145,6 +150,9 @@ class AppointmentController extends Controller
 
         $appointment->update($validated);
 
+        // Handle reminders
+        $this->syncReminders($appointment, $request->input('reminders', []));
+
         return redirect()
             ->route('calendar.dashboard')
             ->with('success', 'Appointment updated successfully.');
@@ -190,5 +198,37 @@ class AppointmentController extends Controller
         return redirect()
             ->back()
             ->with('success', 'Appointment cancelled.');
+    }
+
+    /**
+     * Sync reminders for an appointment.
+     */
+    protected function syncReminders(Appointment $appointment, array $reminders): void
+    {
+        // Delete existing reminders
+        $appointment->reminders()->delete();
+
+        // Create new reminders
+        foreach ($reminders as $minutes => $reminder) {
+            if (! isset($reminder['enabled']) || ! $reminder['enabled']) {
+                continue;
+            }
+
+            $types = [];
+            if (! empty($reminder['email'])) {
+                $types[] = 'email';
+            }
+            if (! empty($reminder['browser'])) {
+                $types[] = 'browser';
+            }
+
+            foreach ($types as $type) {
+                $appointment->reminders()->create([
+                    'reminder_minutes_before' => (int) $minutes,
+                    'notification_type' => $type,
+                    'is_sent' => false,
+                ]);
+            }
+        }
     }
 }

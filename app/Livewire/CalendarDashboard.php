@@ -18,6 +18,8 @@ class CalendarDashboard extends Component
 
     public bool $showAppointmentModal = false;
 
+    public string $search = '';
+
     public function mount(): void
     {
         $this->currentDate = now();
@@ -97,6 +99,24 @@ class CalendarDashboard extends Component
         $this->showAppointmentModal = true;
     }
 
+    /**
+     * Handle keyboard shortcut events
+     */
+    #[\Livewire\Attributes\On('keyboard-shortcut')]
+    public function handleKeyboardShortcut(string $action): void
+    {
+        match ($action) {
+            'today' => $this->today(),
+            'next' => $this->next(),
+            'previous' => $this->previous(),
+            'view-month' => $this->changeView('month'),
+            'view-week' => $this->changeView('week'),
+            'view-day' => $this->changeView('day'),
+            'view-list' => $this->changeView('list'),
+            default => null,
+        };
+    }
+
     public function closeAppointmentModal(): void
     {
         $this->showAppointmentModal = false;
@@ -141,6 +161,14 @@ class CalendarDashboard extends Component
             ->whereIn('calendar_id', $this->visibleCalendars)
             ->where('user_id', auth()->id())
             ->betweenDates($startDate, $endDate)
+            ->when($this->search !== '', function ($q) {
+                $term = '%'.trim($this->search).'%';
+                $q->where(function ($sub) use ($term) {
+                    $sub->where('title', 'like', $term)
+                        ->orWhere('description', 'like', $term)
+                        ->orWhere('location', 'like', $term);
+                });
+            })
             ->with(['calendar:id,name,color'])
             ->orderBy('start_datetime', 'asc')
             ->get();
