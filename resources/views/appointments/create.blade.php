@@ -96,6 +96,39 @@
                                 @enderror
                             </div>
 
+                            <!-- Reminders -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Reminders</label>
+                                <div class="space-y-3">
+                                    @foreach([5 => '5 minutes before', 15 => '15 minutes before', 30 => '30 minutes before', 60 => '1 hour before', 1440 => '1 day before'] as $minutes => $label)
+                                        <div class="flex items-start gap-3">
+                                            <div class="flex items-center h-5">
+                                                <input type="checkbox" name="reminders[{{ $minutes }}][enabled]" id="reminder_{{ $minutes }}" value="1"
+                                                    {{ in_array($minutes, old('default_reminders', $defaultReminders ?? [15])) ? 'checked' : '' }}
+                                                    class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                                            </div>
+                                            <div class="flex-1">
+                                                <label for="reminder_{{ $minutes }}" class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ $label }}</label>
+                                                <div class="mt-1 flex gap-2">
+                                                    <label class="inline-flex items-center">
+                                                        <input type="checkbox" name="reminders[{{ $minutes }}][email]" value="1"
+                                                            {{ in_array($minutes, old('default_reminders', $defaultReminders ?? [15])) ? 'checked' : '' }}
+                                                            class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                                                        <span class="ml-1 text-xs text-gray-600 dark:text-gray-400">Email</span>
+                                                    </label>
+                                                    <label class="inline-flex items-center">
+                                                        <input type="checkbox" name="reminders[{{ $minutes }}][browser]" value="1"
+                                                            class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                                                        <span class="ml-1 text-xs text-gray-600 dark:text-gray-400">Browser</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                                <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">Select when and how you want to be reminded about this appointment</p>
+                            </div>
+
                             <!-- Actions -->
                             <div class="flex items-center justify-end gap-4">
                                 <a href="{{ route('calendar.dashboard') }}" class="text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200">
